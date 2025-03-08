@@ -8,14 +8,14 @@ namespace Match3.View
     {
         public int GridWidth { get; private set; }
         public int GridHeight { get; private set; }
-        public float GridWorldStartPoint { get; private set; }
-        public float GridWorldEndPoint { get; private set; }
+        public Vector2 GridWorldStartPoint { get; private set; }
+        public Vector2 GridWorldEndPoint { get; private set; }
         public TileView[,] TileViews { get; private set; }
 
-        [SerializeField] private TileView tilePrefab;
+        [SerializeField] private TileView tileViewPrefab;
         [SerializeField] private Transform tileViewsParent;
 
-        public void InitializeGrid(LogicalGrid logicalGrid, float gridWorldStartPoint, float gridWorldEndPoint)
+        public void InitializeGrid(LogicalGrid logicalGrid, Vector2 gridWorldStartPoint, Vector2 gridWorldEndPoint)
         {
             GridWidth = logicalGrid.GridWidth;
             GridHeight = logicalGrid.GridHeight;
@@ -30,14 +30,14 @@ namespace Match3.View
             {
                 for(int y = 0; y < GridHeight; y++)
                 {
-                    TileViews[x, y] = CreateTileView(x, y, 0, 0, Vector3.one, logicalGrid.Tiles[x,y].Fruit);
+                    TileViews[x, y] = CreateTileView(x, y, x, y, Vector3.one, logicalGrid.Tiles[x,y].Fruit);
                 }
             }
         }
 
         private TileView CreateTileView(int gridPositionX, int gridPositionY, float worldPositionX, float worldPositionY,Vector3 scale, FruitDataSO fruit)
         {
-            TileView tileView = Instantiate(tilePrefab, tileViewsParent);
+            TileView tileView = Instantiate(tileViewPrefab, tileViewsParent);
             tileView.SetGridPosition(gridPositionX,gridPositionY);
             tileView.SetWorldPosition(worldPositionX, worldPositionY);
             tileView.SetSprite(fruit.Sprite);
