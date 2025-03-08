@@ -1,0 +1,315 @@
+fileFormatVersion: 2
+guid: 4f56e3ca3356abc4bba464eeb5149ec5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6069486473600494774
+    second: fruits3_0
+  - first:
+      213: 5415148651798241172
+    second: fruits3_1
+  - first:
+      213: 4569574740443608827
+    second: fruits3_2
+  - first:
+      213: -5933108166580417377
+    second: fruits3_3
+  - first:
+      213: 7020270360970606052
+    second: fruits3_4
+  - first:
+      213: -8596442976591047489
+    second: fruits3_5
+  - first:
+      213: -3220651224140192533
+    second: fruits3_6
+  - first:
+      213: -2000335434440733520
+    second: fruits3_7
+  - first:
+      213: 3548033898186067724
+    second: fruits3_8
+  - first:
+      213: 5948618535572592546
+    second: fruits3_9
+  - first:
+      213: -6375949495086334648
+    second: fruits3_10
+  - first:
+      213: -270312094938875013
+    second: fruits3_11
+  - first:
+      213: -8183527037516566815
+    second: fruits3_12
+  - first:
+      213: -8100538920628365154
+    second: fruits3_13
+  - first:
+      213: 6269291957102559751
+    second: fruits3_14
+  - first:
+      213: -136910583303512504
+    second: fruits3_15
+  - first:
+      213: -3767847985158049247
+    second: fruits3_16
+  - first:
+      213: 5915058725267267467
+    second: fruits3_17
+  - first:
+      213: 5255634026204099994
+    second: fruits3_18
+  - first:
+      213: -4990622160083321471
+    second: fruits3_19
+  - first:
+      213: -8371679621483064330
+    second: fruits3_20
+  - first:
+      213: 1964771021764112964
+    second: fruits3_21
+  - first:
+      213: -5587708122609950768
+    second: fruits3_22
+  - first:
+      213: -6008322915506619040
+    second: fruits3_23
+  - first:
+      213: 269837818307925016
+    second: fruits3_24
+  - first:
+      213: 2526834640311552572
+    second: fruits3_25
+  - first:
+      213: 5026340549165961255
+    second: fruits3_26
+  - first:
+      213: 8003719216927160452
+    second: fruits3_27
+  - first:
+      213: -3849933930854524610
+    second: fruits3_28
+  - first:
+      213: -4129700627203436435
+    second: fruits3_29
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Pear
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 412
+        width: 160
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d946fed2209fa94ca4a9d6e11af55f5
+      internalID: -17509593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Strawberry
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 608
+        width: 180
+        height: 180
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ca29f1b453f76f4cacf628472a3ef86
+      internalID: -1501577999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grape
+      rect:
+        serializedVersion: 2
+        x: 825
+        y: 811
+        width: 180
+        height: 180
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f44382147b4f8fc4fbf3b1e27320dabf
+      internalID: 655773928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: ee1c6e3153e55464e9db6b8c7381f04f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Grape: 655773928
+      Pear: -17509593
+      Strawberry: -1501577999
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
