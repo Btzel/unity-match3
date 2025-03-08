@@ -9,11 +9,14 @@ namespace Match3.View
         public float WorldPositionX { get; private set; }
         public float WorldPositionY { get; private set; }
 
-        private SpriteRenderer spriteRenderer;
+        public SpriteRenderer spriteRenderer;
 
-        private void Awake()
+        public TileView(int gridPositionX, int gridPositionY, float worldPositionX, float worldPositionY)
         {
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            GridPositionX = gridPositionX;
+            GridPositionY = gridPositionY;
+            WorldPositionX = worldPositionX;
+            WorldPositionY = worldPositionY;
         }
 
         public void SetGridPosition(int gridPositionX, int gridPositionY)
@@ -37,6 +40,5 @@ namespace Match3.View
         {
             transform.localScale = scale;
         }
-
     }
 }

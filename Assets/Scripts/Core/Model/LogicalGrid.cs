@@ -22,9 +22,15 @@ namespace Match3.Model
             {
                 for(int y = 0; y < GridHeight; y++)
                 {
-                    Tiles[x, y] = new Tile(x, y, false, Fruits[Random.Range(0,Fruits.Length)]);
+                    FruitDataSO randomFruit = Fruits[Random.Range(0, Fruits.Length)];
+                    CreateTile(x, y, false, randomFruit);
                 }
             }
+        }
+
+        private void CreateTile(int x, int y, bool isSelected, FruitDataSO fruit)
+        {
+            Tiles[x, y] = new Tile(x, y, isSelected, fruit);
         }
     }
 }
