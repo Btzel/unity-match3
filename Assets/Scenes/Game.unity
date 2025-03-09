@@ -331,10 +331,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridPresenter: {fileID: 745254328}
   visualGrid: {fileID: 1688437383}
-  gridWidth: 3
-  gridHeight: 3
-  gridWorldStartPoint: {x: -2, y: -5}
-  gridWorldEndPoint: {x: 7, y: 5}
+  gridSize: {x: 50, y: 50}
+  gridStartPos: {x: -2, y: -4}
+  gridEndPos: {x: 9, y: 4}
   fruits:
   - {fileID: 11400000, guid: 9482494fa144d5341a1e1807a7e39c49, type: 2}
   - {fileID: 11400000, guid: 0e268ace4b0065845884751e625aee6e, type: 2}
@@ -468,6 +467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 60597436843949558, guid: a6c9f1d97a7d98b4e9f8608ee7f2f960, type: 3}
   tilesParent: {fileID: 1879189498}
+  gridPresenter: {fileID: 0}
 --- !u!4 &1688437384
 Transform:
   m_ObjectHideFlags: 0

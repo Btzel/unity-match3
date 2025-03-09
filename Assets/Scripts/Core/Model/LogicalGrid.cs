@@ -24,6 +24,7 @@ namespace Match3.Model
                 {
                     FruitDataSO randomFruit = Fruits[Random.Range(0, Fruits.Length)];
                     CreateTile(x, y, false, randomFruit);
+                    Debug.Log(x + " " + y);
                 }
             }
         }
