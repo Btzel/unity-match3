@@ -1,53 +1,71 @@
-using Match3.Model;
-using Match3.SO;
+﻿using Match3.Model;
 using UnityEngine;
 
 namespace Match3.View
 {
     public class VisualGrid : MonoBehaviour
     {
-        public int GridWidth { get; private set; }
-        public int GridHeight { get; private set; }
-        public Vector2 GridWorldStartPoint { get; private set; }
-        public Vector2 GridWorldEndPoint { get; private set; }
-        public TileView[,] TileViews { get; private set; }
+        public Vector2 GridStartPos { get; private set; }
+        public Vector2 GridEndPos { get; private set; }
 
-        [SerializeField] private TileView tileViewPrefab;
-        [SerializeField] private Transform tileViewsParent;
+        [SerializeField] private TileView tilePrefab;
+        [SerializeField] private Transform tilesParent;
 
-        public void InitializeGrid(LogicalGrid logicalGrid, Vector2 gridWorldStartPoint, Vector2 gridWorldEndPoint)
+        private TileView[,] tileViews;
+
+        public void InitializeGrid(LogicalGrid logicalGrid, Vector2 startPos, Vector2 endPos)
         {
-            GridWidth = logicalGrid.GridWidth;
-            GridHeight = logicalGrid.GridHeight;
-            GridWorldStartPoint = gridWorldStartPoint;
-            GridWorldEndPoint = gridWorldEndPoint;
+            int width = logicalGrid.GridWidth;
+            int height = logicalGrid.GridHeight;
+            tileViews = new TileView[width, height];
+
+            GridStartPos = startPos;
+            GridEndPos = endPos;
+
+            float gridWidth = Mathf.Abs(endPos.x - startPos.x);
+            float gridHeight = Mathf.Abs(endPos.y - startPos.y);
+            float tileSizeX = gridWidth / width;
+            float tileSizeY = gridHeight / height;
+            float tileSize = Mathf.Min(tileSizeX, tileSizeY);
+
+            Vector2 gridCenter = new Vector2((startPos.x + endPos.x) / 2f, (startPos.y + endPos.y) / 2f);
+
+            float startX = gridCenter.x - (width * tileSize) / 2f;
+            float startY = gridCenter.y - (height * tileSize) / 2f;
 
 
-            
-            TileViews = new TileView[GridWidth, GridHeight];
-
-            for(int x = 0; x < GridWidth; x++)
+            for (int x = 0; x < width; x++)
             {
-                for(int y = 0; y < GridHeight; y++)
+                for (int y = 0; y < height; y++)
                 {
-                    TileViews[x, y] = CreateTileView(x, y, x, y, Vector3.one, logicalGrid.Tiles[x,y].Fruit);
+                    Tile tileModel = logicalGrid.GetTile(x, y);
+                    if (tileModel != null)
+                    {
+                        Sprite tileSprite = tileModel.Fruit.Sprite;
+                        string fruitName = tileModel.Fruit.FruitName;
+
+                        float posX = startX + x * tileSize + tileSize / 2f;
+                        float posY = startY + y * tileSize + tileSize / 2f;
+                        Vector2Int gridPosition = new Vector2Int(x, y);
+                        Vector2 tilePosition = new Vector2(posX, posY);
+                        Vector3 tileScale = new Vector3(tileSize,tileSize);
+                        tileViews[x, y] = CreateTileView(gridPosition,tilePosition, tileSprite,tileScale, fruitName, tileSize);
+                    }
                 }
             }
         }
 
-        private TileView CreateTileView(int gridPositionX, int gridPositionY, float worldPositionX, float worldPositionY,Vector3 scale, FruitDataSO fruit)
+        private TileView CreateTileView(Vector2Int gridPosition, Vector2 worldPosition, Sprite sprite,Vector3 scale, string fruitName, float tileSize)
         {
-            TileView tileView = Instantiate(tileViewPrefab, tileViewsParent);
-            tileView.SetGridPosition(gridPositionX,gridPositionY);
-            tileView.SetWorldPosition(worldPositionX, worldPositionY);
-            tileView.SetSprite(fruit.Sprite);
-            tileView.SetScale(scale);
+            TileView newTileView = Instantiate(tilePrefab, tilesParent);
+            newTileView.SetGridPosition(gridPosition);
+            newTileView.SetWorldPosition(worldPosition);
+            newTileView.SetSprite(sprite);
+            newTileView.SetScale(scale);
+            newTileView.transform.name = $"{fruitName} ({gridPosition.x}, {gridPosition.y})";
+            newTileView.transform.position = worldPosition;
 
-            tileView.transform.position = new Vector2(worldPositionX, worldPositionY);
-            tileView.transform.localScale = scale;
-            tileView.transform.name = $"{fruit.FruitName} ({gridPositionX}:{gridPositionY})";
-
-            return tileView;
+            return newTileView;
         }
     }
 }

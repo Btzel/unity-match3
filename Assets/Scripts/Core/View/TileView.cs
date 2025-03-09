@@ -19,16 +19,16 @@ namespace Match3.View
             WorldPositionY = worldPositionY;
         }
 
-        public void SetGridPosition(int gridPositionX, int gridPositionY)
+        public void SetGridPosition(Vector2Int gridPosition)
         {
-            GridPositionX = gridPositionX;
-            GridPositionY = gridPositionY;
+            GridPositionX = gridPosition.x;
+            GridPositionY = gridPosition.y;
         }
 
-        public void SetWorldPosition(float worldPositionX, float worldPositionY)
+        public void SetWorldPosition(Vector2 worldPosition)
         {
-            WorldPositionX = worldPositionX;
-            WorldPositionY = worldPositionY;
+            WorldPositionX = worldPosition.x;
+            WorldPositionY = worldPosition.y;
         }
 
         public void SetSprite(Sprite sprite)

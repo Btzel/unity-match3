@@ -32,5 +32,17 @@ namespace Match3.Model
         {
             Tiles[x, y] = new Tile(x, y, isSelected, fruit);
         }
+
+        public Tile GetTile(int x, int y)
+        {
+            if (Tiles[x,y] != null)
+            {
+                return Tiles[x, y];
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

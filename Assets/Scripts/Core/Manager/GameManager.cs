@@ -12,18 +12,17 @@ namespace Match3.Manager
         [SerializeField] private VisualGrid visualGrid;
 
         [Header("Grid Settings")]
-        [SerializeField] private int gridWidth;
-        [SerializeField] private int gridHeight;
+        [SerializeField] private Vector2Int gridSize;
 
-        [SerializeField] private Vector2 gridWorldStartPoint;
-        [SerializeField] private Vector2 gridWorldEndPoint;
+        [SerializeField] private Vector2 gridStartPos;
+        [SerializeField] private Vector2 gridEndPos;
 
         [Header("Tile Settings")]
         [SerializeField] private FruitDataSO[] fruits;
 
         private void Awake()
         {
-            gridPresenter.InitializeGrid(visualGrid, gridWidth, gridHeight, gridWorldStartPoint, gridWorldEndPoint,fruits);
+            gridPresenter.InitializeGrid(visualGrid, gridSize, gridStartPos, gridEndPos, fruits);
         }
     }
 }

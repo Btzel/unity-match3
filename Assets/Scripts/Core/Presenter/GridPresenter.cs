@@ -10,12 +10,12 @@ namespace Match3.Presenter
         private LogicalGrid logicalGrid;
         private VisualGrid visualGrid;
 
-        public void InitializeGrid(VisualGrid visualGrid,int gridWidth,int gridHeight,Vector2 gridWorldStartPoint, Vector2 gridWorldEndPoint, FruitDataSO[] fruits)
+        public void InitializeGrid(VisualGrid visualGrid,Vector2Int gridSize,Vector2 gridStartPos, Vector2 gridEndPos, FruitDataSO[] fruits)
         {
             this.visualGrid = visualGrid;
             logicalGrid = new LogicalGrid();
-            logicalGrid.InitializeGrid(gridWidth, gridHeight, fruits);
-            visualGrid.InitializeGrid(logicalGrid,gridWorldStartPoint,gridWorldEndPoint);
+            logicalGrid.InitializeGrid(gridSize.x, gridSize.y, fruits);
+            visualGrid.InitializeGrid(logicalGrid, gridStartPos, gridEndPos);
         }
     }
 }
