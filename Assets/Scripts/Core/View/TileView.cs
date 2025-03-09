@@ -19,6 +19,11 @@ namespace Match3.View
             WorldPositionY = worldPositionY;
         }
 
+        public void SetHighlight(bool isHighlighted)
+        {
+            spriteRenderer.color = isHighlighted ? Color.yellow : Color.white; // Örnek: Seçili olunca sar?ya boyar
+        }
+
         public void SetGridPosition(Vector2Int gridPosition)
         {
             GridPositionX = gridPosition.x;

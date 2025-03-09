@@ -1,5 +1,6 @@
 ﻿using Match3.Model;
 using Match3.Presenter;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Match3.View
@@ -18,6 +19,28 @@ namespace Match3.View
 
         private TileView[,] tileViews;
 
+        private void Start()
+        {
+            gridPresenter = FindFirstObjectByType<GridPresenter>();
+            gridPresenter.OnTilesSelected += HighlightSelectedTiles;
+        }
+
+        private void OnDestroy()
+        {
+            gridPresenter.OnTilesSelected -= HighlightSelectedTiles;
+        }
+
+        private void HighlightSelectedTiles(List<Tile> selectedTiles)
+        {
+            foreach (Tile tile in selectedTiles)
+            {
+                TileView tileView = GetTileView(tile.PositionX, tile.PositionY);
+                if (tileView != null)
+                {
+                    tileView.SetHighlight(true);
+                }
+            }
+        }
         public void InitializeGrid(LogicalGrid logicalGrid, Vector2 startPos, Vector2 endPos)
         {
             GridWidth = logicalGrid.GridWidth;

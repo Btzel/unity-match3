@@ -2,6 +2,7 @@
 using Match3.Model;
 using Match3.SO;
 using Match3.View;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,14 +10,14 @@ namespace Match3.Presenter
 {
     public class GridPresenter : MonoBehaviour
     {
+        public event Action<List<Tile>> OnTilesSelected;
+
         private LogicalGrid logicalGrid;
         private VisualGrid visualGrid;
 
         private FruitDataSO currentFruitType;
-        [SerializeField] private List<TileView> currentTileViews = new List<TileView>();
-        [SerializeField] private List<TileView> selectedTileViews = new List<TileView>();
-
         private InputHandler inputHandler;
+        private List<Tile> selectedTiles = new List<Tile>();
 
         private void Start()
         {
@@ -60,7 +61,6 @@ namespace Match3.Presenter
 
         public void HandleSelectionStart(Vector2 worldPosition)
         {
-
             RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
             if (hit.collider != null && hit.collider.CompareTag("TileView"))
             {
@@ -70,10 +70,9 @@ namespace Match3.Presenter
                 if (!tile.IsSelected)
                 {
                     currentFruitType = tile.Fruit;
-                    currentTileViews.Add(tileView);
+                    selectedTiles.Add(tile);
                 }
             }
-            
         }
         public void HandleSelectionContinue(Vector2 worldPosition)
         {
@@ -85,16 +84,16 @@ namespace Match3.Presenter
                 TileView tileView = hit.collider.GetComponent<TileView>();
                 Tile tile = GetTileAt(tileView.GridPositionX, tileView.GridPositionY);
                 List<Tile> tileNeighbors = GetNeighborsAt(tile);
-                Debug.Log(tileNeighbors.Count);
+
                 foreach (Tile tileNeighbor in tileNeighbors)
                 {
-                    if (!tile.IsSelected && currentTileViews.Contains(GetTileViewAt(tileNeighbor.PositionX, tileNeighbor.PositionY)))
+                    if (!tile.IsSelected && selectedTiles.Contains(tileNeighbor))
                     {
                         if (tile.Fruit == currentFruitType)
                         {
-                            if (!currentTileViews.Contains(tileView))
+                            if (!selectedTiles.Contains(tile))
                             {
-                                currentTileViews.Add(tileView);
+                                selectedTiles.Add(tile);
                                 break;
                             }
                         }
@@ -109,18 +108,18 @@ namespace Match3.Presenter
         public void HandleSelectionEnd()
         {
             
-            if (currentTileViews.Count >= 3)
+            if (selectedTiles.Count >= 3)
             {
-                foreach (TileView tileView in currentTileViews)
+                foreach (Tile tile in selectedTiles)
                 {
-                    GetTileAt(tileView.GridPositionX, tileView.GridPositionY).SetSelected(true);
+                    tile.SetSelected(true);
                 }
-                selectedTileViews.AddRange(currentTileViews);
-                currentTileViews.Clear();
+                OnTilesSelected?.Invoke(new List<Tile>(selectedTiles));
+                selectedTiles.Clear();
             }
             else
             {
-                currentTileViews.Clear();
+                selectedTiles.Clear();
             }
             
         }
