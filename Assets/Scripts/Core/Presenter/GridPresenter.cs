@@ -1,3 +1,4 @@
+﻿using Match3.InputH;
 using Match3.Model;
 using Match3.SO;
 using Match3.View;
@@ -10,6 +11,27 @@ namespace Match3.Presenter
     {
         private LogicalGrid logicalGrid;
         private VisualGrid visualGrid;
+
+        private FruitDataSO currentFruitType;
+        [SerializeField] private List<TileView> currentTileViews = new List<TileView>();
+        [SerializeField] private List<TileView> selectedTileViews = new List<TileView>();
+
+        private InputHandler inputHandler;
+
+        private void Start()
+        {
+            inputHandler = FindFirstObjectByType<InputHandler>(); // InputHandler'ı buluyoruz.
+            inputHandler.OnSelectionStart += HandleSelectionStart;
+            inputHandler.OnSelectionContinue += HandleSelectionContinue;
+            inputHandler.OnSelectionEnd += HandleSelectionEnd;
+        }
+
+        private void OnDestroy()
+        {
+            inputHandler.OnSelectionStart -= HandleSelectionStart;
+            inputHandler.OnSelectionContinue -= HandleSelectionContinue;
+            inputHandler.OnSelectionEnd -= HandleSelectionEnd;
+        }
 
         public void InitializeGrid(VisualGrid visualGrid,Vector2Int gridSize,Vector2 gridStartPos, Vector2 gridEndPos, FruitDataSO[] fruits)
         {
@@ -36,34 +58,71 @@ namespace Match3.Presenter
             return logicalGrid.GetNeighbors(tile);
         }
 
-        // VisualGrid Calculations
-        public float CalculateTileSize(int gridWidth,int gridHeight,Vector2 startPos,Vector2 endPos)
+        public void HandleSelectionStart(Vector2 worldPosition)
         {
-            float gridRealWidth = Mathf.Abs(endPos.x - startPos.x);
-            float gridRealHeight = Mathf.Abs(endPos.y - startPos.y);
-            float tileSizeX = gridRealWidth / gridWidth;
-            float tileSizeY = gridRealHeight / gridHeight;
 
-            return Mathf.Min(tileSizeX, tileSizeY); ;
+            RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
+            if (hit.collider != null && hit.collider.CompareTag("TileView"))
+            {
+
+                TileView tileView = hit.collider.GetComponent<TileView>();
+                Tile tile = GetTileAt(tileView.GridPositionX, tileView.GridPositionY);
+                if (!tile.IsSelected)
+                {
+                    currentFruitType = tile.Fruit;
+                    currentTileViews.Add(tileView);
+                }
+            }
+            
         }
-
-        public Vector2 CalculateStartPos(int gridWidth, int gridHeight, Vector2 startPos, Vector2 endPos, float tileSize)
+        public void HandleSelectionContinue(Vector2 worldPosition)
         {
-            Vector2 gridCenter = new Vector2((startPos.x + endPos.x) / 2f, (startPos.y + endPos.y) / 2f);
+            RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
+            if (hit.collider != null && hit.collider.CompareTag("TileView"))
+            {
 
-            float startX = gridCenter.x - (gridWidth * tileSize) / 2f;
-            float startY = gridCenter.y - (gridHeight * tileSize) / 2f;
+                // check if the adjacent of the selected fruits (on 8 direction)
+                TileView tileView = hit.collider.GetComponent<TileView>();
+                Tile tile = GetTileAt(tileView.GridPositionX, tileView.GridPositionY);
+                List<Tile> tileNeighbors = GetNeighborsAt(tile);
+                Debug.Log(tileNeighbors.Count);
+                foreach (Tile tileNeighbor in tileNeighbors)
+                {
+                    if (!tile.IsSelected && currentTileViews.Contains(GetTileViewAt(tileNeighbor.PositionX, tileNeighbor.PositionY)))
+                    {
+                        if (tile.Fruit == currentFruitType)
+                        {
+                            if (!currentTileViews.Contains(tileView))
+                            {
+                                currentTileViews.Add(tileView);
+                                break;
+                            }
+                        }
 
-            return new Vector2(startX, startY);
+                    }
+                }
 
+
+            }
+            
         }
-
-        public Vector2 CalculateTileViewPos(Vector2Int gridPos,Vector2 startPos, float tileSize)
+        public void HandleSelectionEnd()
         {
-            float posX = startPos.x + gridPos.x * tileSize + tileSize / 2f;
-            float posY = startPos.y + gridPos.y * tileSize + tileSize / 2f;
-
-            return new Vector2(posX, posY);
+            
+            if (currentTileViews.Count >= 3)
+            {
+                foreach (TileView tileView in currentTileViews)
+                {
+                    GetTileAt(tileView.GridPositionX, tileView.GridPositionY).SetSelected(true);
+                }
+                selectedTileViews.AddRange(currentTileViews);
+                currentTileViews.Clear();
+            }
+            else
+            {
+                currentTileViews.Clear();
+            }
+            
         }
     }
 }
