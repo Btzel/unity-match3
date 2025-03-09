@@ -1,6 +1,7 @@
 using Match3.Model;
 using Match3.SO;
 using Match3.View;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Match3.Presenter
@@ -18,6 +19,24 @@ namespace Match3.Presenter
             visualGrid.InitializeGrid(logicalGrid, gridStartPos, gridEndPos);
         }
 
+        // Get Visual and Logical Tiles
+        public Tile GetTileAt(int x, int y)
+        {
+            return logicalGrid.GetTile(x, y);
+        }
+
+        public TileView GetTileViewAt(int x, int y)
+        {
+            return visualGrid.GetTileView(x, y);
+        }
+
+        // get Tile Neighbors
+        public List<Tile> GetNeighborsAt(Tile tile)
+        {
+            return logicalGrid.GetNeighbors(tile);
+        }
+
+        // VisualGrid Calculations
         public float CalculateTileSize(int gridWidth,int gridHeight,Vector2 startPos,Vector2 endPos)
         {
             float gridRealWidth = Mathf.Abs(endPos.x - startPos.x);

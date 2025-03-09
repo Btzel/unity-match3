@@ -61,5 +61,17 @@ namespace Match3.View
 
             return newTileView;
         }
+
+        public TileView GetTileView(int x, int y)
+        {
+            if (tileViews[x, y] != null)
+            {
+                return tileViews[x, y];
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

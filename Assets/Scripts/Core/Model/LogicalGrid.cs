@@ -1,4 +1,5 @@
 using Match3.SO;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -45,5 +46,41 @@ namespace Match3.Model
                 return null;
             }
         }
+
+        public List<Tile> GetNeighbors(Tile tile)
+        {
+            int[,] directions = new int[,]
+            {
+                {-1,-1 },
+                {-1, 0 },
+                {-1, 1 },
+                { 0,-1 },
+                { 0, 1 },
+                { 1,-1 },
+                { 1, 0 },
+                { 1, 1 }
+            };
+
+            List<Tile> neighbors = new List<Tile>();
+
+            for(int i = 0; i < directions.GetLength(0); i++)
+            {
+                int newX = tile.PositionX + directions[i, 0];
+                int newY = tile.PositionY + directions[i, 1];
+
+                if (newX >= 0 && newY >= 0 && newX < GridWidth && newY < GridHeight)
+                {
+                    Tile neighbor = GetTile(newX, newY);
+                    if (neighbor != null)
+                    {
+                        neighbors.Add(neighbor);
+                    }
+                }
+            }
+
+            return neighbors;
+
+        }
+
     }
 }
