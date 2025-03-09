@@ -1,4 +1,5 @@
 using Match3.SO;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,9 @@ namespace Match3.Model
 {
     public class LogicalGrid
     {
+        public event Action OnTilesShifted;
+        public event Action<List<Tile>> OnColumnShifted;
+
         public int GridWidth { get; private set; }
         public int GridHeight { get; private set; }
         public FruitDataSO[] Fruits;
@@ -23,9 +27,8 @@ namespace Match3.Model
             {
                 for(int y = 0; y < GridHeight; y++)
                 {
-                    FruitDataSO randomFruit = Fruits[Random.Range(0, Fruits.Length)];
+                    FruitDataSO randomFruit = Fruits[UnityEngine.Random.Range(0, Fruits.Length)];
                     CreateTile(x, y, false, randomFruit);
-                    Debug.Log(x + " " + y);
                 }
             }
         }
@@ -82,5 +85,25 @@ namespace Match3.Model
 
         }
 
+        public void ShiftSelectedTilesUp()
+        {
+            for (int x = 0; x < GridWidth; x++)
+            {
+                List<Tile> columnTiles = new List<Tile>();
+                for (int y = 0; y < GridHeight; y++)
+                {
+                    columnTiles.Add(Tiles[x, y]);
+                }
+                columnTiles.Sort((a, b) => a.IsSelected.CompareTo(b.IsSelected));
+                OnColumnShifted?.Invoke(columnTiles);
+                for (int y = 0; y < GridHeight; y++)
+                {
+                    Tiles[x, y] = columnTiles[y];
+                    Tiles[x, y].SetPosition(x, y);
+                }
+
+            }
+            OnTilesShifted?.Invoke();
+        }
     }
 }

@@ -1,5 +1,7 @@
-﻿using Match3.Model;
+﻿using DG.Tweening;
+using Match3.Model;
 using Match3.Presenter;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +9,7 @@ namespace Match3.View
 {
     public class VisualGrid : MonoBehaviour
     {
+
         public int GridWidth { get; private set; }
         public int GridHeight { get; private set; }
         public Vector2 GridStartPos { get; private set; }
@@ -30,17 +33,7 @@ namespace Match3.View
             gridPresenter.OnTilesSelected -= HighlightSelectedTiles;
         }
 
-        private void HighlightSelectedTiles(List<Tile> selectedTiles)
-        {
-            foreach (Tile tile in selectedTiles)
-            {
-                TileView tileView = GetTileView(tile.PositionX, tile.PositionY);
-                if (tileView != null)
-                {
-                    tileView.SetHighlight(true);
-                }
-            }
-        }
+        
         public void InitializeGrid(LogicalGrid logicalGrid, Vector2 startPos, Vector2 endPos)
         {
             GridWidth = logicalGrid.GridWidth;
@@ -94,6 +87,60 @@ namespace Match3.View
             else
             {
                 return null;
+            }
+        }
+
+        private void HighlightSelectedTiles(List<Tile> selectedTiles)
+        {
+            foreach (Tile tile in selectedTiles)
+            {
+                TileView tileView = GetTileView(tile.PositionX, tile.PositionY);
+                if (tileView != null)
+                {
+                    // Implemented Later
+                }
+            }
+        }
+
+        public void UpdateTileColumn(List<Tile> tileList)
+        {
+            List<TileView> tileViewColumn = new List<TileView>();
+            int x = tileList[0].PositionX;
+            for(int y = 0; y < tileList.Count; y++)
+            {
+                tileViewColumn.Add(tileViews[x, y]);
+            }
+
+            for (int y = 0; y < tileList.Count; y++)
+            {
+                Tile tile = tileList[y];
+                tileViews[x, y] = tileViewColumn[tile.PositionY];
+            }
+
+            for (int y = 0; y < tileList.Count; y++)
+            {
+                Tile tile = tileList[y];
+                tileViews[x, y].SetGridPosition(new Vector2Int(x,y));
+            }
+
+
+
+        }
+        public void UpdateTileVisual()
+        {
+            for(int x = 0; x < GridWidth; x++)
+            {
+                for(int y = 0; y < GridHeight; y++)
+                {
+                    TileView tileView = GetTileView(x, y);
+                    if(tileView != null)
+                    {
+                        float tileSize = CalculateTileSize(GridWidth, GridHeight, GridStartPos, GridEndPos);
+                        Vector2 startPos = CalculateStartPos(GridWidth, GridHeight, GridStartPos, GridEndPos, tileSize);
+                        Vector2 targetPos = CalculateTileViewPos(new Vector2Int(tileView.GridPositionX,tileView.GridPositionY), startPos, tileSize);
+                        tileView.transform.DOMove(targetPos, 0.5f).SetEase(Ease.OutBounce);
+                    }
+                }
             }
         }
 

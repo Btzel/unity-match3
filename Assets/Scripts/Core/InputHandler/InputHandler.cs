@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Match3.InputH
 {
@@ -9,6 +10,14 @@ namespace Match3.InputH
         public event Action<Vector2> OnSelectionStart;
         public event Action<Vector2> OnSelectionContinue;
         public event Action OnSelectionEnd;
+        public event Action OnDestroySelectedTiles;
+
+        [SerializeField] private Button destroyButton;
+
+        private void Start()
+        {
+            destroyButton.onClick.AddListener(() => OnDestroySelectedTiles?.Invoke());
+        }
 
         private void Update()
         {
