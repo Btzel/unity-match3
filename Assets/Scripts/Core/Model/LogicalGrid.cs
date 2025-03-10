@@ -84,6 +84,22 @@ namespace Match3.Model
 
         }
 
+        public List<Tile> GetSelectedTiles()
+        {
+            List<Tile> selectedTiles = new List<Tile>();
+            for (int x = 0; x < GridWidth; x++)
+            {
+                for (int y = 0; y < GridHeight; y++)
+                {
+                    if (Tiles[x, y].IsSelected)
+                    {
+                        selectedTiles.Add(Tiles[x, y]);
+                    }
+                }
+            }
+            return selectedTiles;
+        }
+
         public void ShiftSelectedTilesUp(FruitDataSO[] fruits)
         {
             for (int x = 0; x < GridWidth; x++)

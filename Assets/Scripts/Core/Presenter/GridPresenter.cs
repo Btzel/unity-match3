@@ -40,7 +40,11 @@ namespace Match3.Presenter
 
         private void HandleDestroySelectedTiles(FruitDataSO[] fruits)
         {
-            logicalGrid.ShiftSelectedTilesUp(fruits); 
+            List<Tile> selectedTiles = logicalGrid.GetSelectedTiles();
+            visualGrid.PlayDestroyAnimationForSelectedTiles(selectedTiles, () =>
+            {
+                logicalGrid.ShiftSelectedTilesUp(fruits);
+            });
         }
 
         private void OnDestroy()

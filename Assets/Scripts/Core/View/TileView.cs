@@ -1,3 +1,5 @@
+using DG.Tweening;
+using System;
 using UnityEngine;
 
 namespace Match3.View
@@ -8,6 +10,7 @@ namespace Match3.View
         public int GridPositionY { get; private set; }
         public float WorldPositionX { get; private set; }
         public float WorldPositionY { get; private set; }
+        public Vector3 DefaultScale { get; private set; }
 
         public SpriteRenderer spriteRenderer;
 
@@ -38,7 +41,16 @@ namespace Match3.View
 
         public void SetScale(Vector3 scale)
         {
+            DefaultScale = scale;
             transform.localScale = scale;
         }
+
+        public void PlayDestroyAnimation(Action onComplete)
+        {
+            transform.DOScale(Vector3.zero, 0.3f)
+                .SetEase(Ease.InBack)
+                .OnComplete(() => onComplete?.Invoke());
+        }
+
     }
 }

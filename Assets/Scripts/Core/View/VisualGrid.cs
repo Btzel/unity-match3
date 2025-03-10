@@ -102,6 +102,27 @@ namespace Match3.View
             }
         }
 
+        public void PlayDestroyAnimationForSelectedTiles(List<Tile> selectedTiles, Action onComplete)
+        {
+            int tilesRemaining = selectedTiles.Count;
+
+            foreach (Tile tile in selectedTiles)
+            {
+                TileView tileView = GetTileView(tile.PositionX, tile.PositionY);
+                if (tileView != null)
+                {
+                    tileView.PlayDestroyAnimation(() =>
+                    {
+                        tilesRemaining--;
+                        if (tilesRemaining == 0)
+                        {
+                            onComplete?.Invoke();
+                        }
+                    });
+                }
+            }
+        }
+
         public void UpdateTileColumn(List<Tile> tileList)
         {
             List<TileView> tileViewColumn = new List<TileView>();
@@ -124,12 +145,15 @@ namespace Match3.View
 
                     tileViews[x, y].transform.position = gridPos;
                     tileViews[x, y].spriteRenderer.sprite = tile.Fruit.Sprite;
+                    tileViews[x, y].transform.localScale = tileViews[x, y].DefaultScale;
                 }
                 Vector2 targetPos = CalculateTileViewPos(new Vector2Int(x, y), startPos, tileSize);
                 tileViews[x, y].transform.DOMove(targetPos, 1f).SetEase(Ease.OutQuint);
                 tileViews[x, y].transform.name = $"{tile.Fruit.name} ({x}, {y})";
             }
         }
+
+
         
 
         public float CalculateTileSize(int gridWidth, int gridHeight, Vector2 startPos, Vector2 endPos)

@@ -642,6 +642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyButton: {fileID: 1925440416}
+  manager: {fileID: 768445774}
 --- !u!1 &1317932355
 GameObject:
   m_ObjectHideFlags: 0
