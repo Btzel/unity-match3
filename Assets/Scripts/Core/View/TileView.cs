@@ -52,5 +52,19 @@ namespace Match3.View
                 .OnComplete(() => onComplete?.Invoke());
         }
 
+        public void PlaySelectedAnimation()
+        {
+            transform.DOScale(new Vector3(DefaultScale.x * 1.15f,
+                                          DefaultScale.y * 1.15f),
+                                          0.15f).SetEase(Ease.InBack);
+        }
+
+        public void PlayDeSelectedAnimation()
+        {
+            transform.DOScale(new Vector3(DefaultScale.x,
+                                          DefaultScale.y),
+                                          0.15f).SetEase(Ease.OutBack);
+        }
+
     }
 }

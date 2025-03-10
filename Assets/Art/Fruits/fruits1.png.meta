@@ -292,10 +292,10 @@ TextureImporter:
       name: Banana
       rect:
         serializedVersion: 2
-        x: 668
-        y: 42
-        width: 160
-        height: 160
+        x: 672
+        y: 29
+        width: 158
+        height: 183
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -314,10 +314,10 @@ TextureImporter:
       name: Apple
       rect:
         serializedVersion: 2
-        x: 50
-        y: 38
-        width: 167
-        height: 167
+        x: 56
+        y: 17
+        width: 157
+        height: 209
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

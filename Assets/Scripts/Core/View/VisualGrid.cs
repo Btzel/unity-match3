@@ -25,12 +25,14 @@ namespace Match3.View
         private void Start()
         {
             gridPresenter = FindFirstObjectByType<GridPresenter>();
-            gridPresenter.OnTilesSelected += HighlightSelectedTiles;
+            gridPresenter.OnTileSelected += AnimateSelectedTile;
+            gridPresenter.OnTilesDeSelected += AnimateDeSelectedTiles;
         }
 
         private void OnDestroy()
         {
-            gridPresenter.OnTilesSelected -= HighlightSelectedTiles;
+            gridPresenter.OnTileSelected -= AnimateSelectedTile;
+            gridPresenter.OnTilesDeSelected -= AnimateDeSelectedTiles;
         }
 
         
@@ -68,6 +70,7 @@ namespace Match3.View
         private TileView CreateTileView(Vector2Int gridPosition, Vector2 worldPosition, Sprite sprite,Vector3 scale, string fruitName, float tileSize)
         {
             TileView newTileView = Instantiate(tilePrefab, tilesParent);
+            
             newTileView.SetGridPosition(gridPosition);
             newTileView.SetWorldPosition(worldPosition);
             newTileView.SetSprite(sprite);
@@ -90,14 +93,24 @@ namespace Match3.View
             }
         }
 
-        private void HighlightSelectedTiles(List<Tile> selectedTiles)
+        private void AnimateSelectedTile(Tile tile)
         {
-            foreach (Tile tile in selectedTiles)
+            TileView tileView = GetTileView(tile.PositionX, tile.PositionY);
+            if (tileView != null)
+            {
+                tileView.PlaySelectedAnimation();
+            }
+            
+        }
+
+        private void AnimateDeSelectedTiles(List<Tile> tileList)
+        {
+            foreach(Tile tile in tileList)
             {
                 TileView tileView = GetTileView(tile.PositionX, tile.PositionY);
-                if (tileView != null)
+                if(tileView != null)
                 {
-                    // Implemented Later
+                    tileView.PlayDeSelectedAnimation();
                 }
             }
         }
@@ -133,7 +146,8 @@ namespace Match3.View
                 tileViewColumn.Add(tileViews[x, y]);
             }
             Vector2 startPos = CalculateStartPos(GridWidth, GridHeight, GridStartPos, GridEndPos, tileSize);
-            Vector2 gridPos = CalculateTileViewPos(new Vector2Int(x, GridHeight), startPos, tileSize);
+            Vector2 gridPos = CalculateTileViewPos(new Vector2Int(x, GridHeight + 5), startPos, tileSize);
+            float duration = .5f;
             for (int y = 0; y < tileList.Count; y++)
             {
                 Tile tile = tileList[y];
@@ -148,8 +162,9 @@ namespace Match3.View
                     tileViews[x, y].transform.localScale = tileViews[x, y].DefaultScale;
                 }
                 Vector2 targetPos = CalculateTileViewPos(new Vector2Int(x, y), startPos, tileSize);
-                tileViews[x, y].transform.DOMove(targetPos, 1f).SetEase(Ease.OutQuint);
+                tileViews[x, y].transform.DOMove(targetPos, duration).SetEase(Ease.OutQuint);
                 tileViews[x, y].transform.name = $"{tile.Fruit.name} ({x}, {y})";
+     
             }
         }
 

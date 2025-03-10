@@ -10,7 +10,8 @@ namespace Match3.Presenter
 {
     public class GridPresenter : MonoBehaviour
     {
-        public event Action<List<Tile>> OnTilesSelected;
+        public event Action<Tile> OnTileSelected;
+        public event Action<List<Tile>> OnTilesDeSelected;
 
         private LogicalGrid logicalGrid;
         private VisualGrid visualGrid;
@@ -95,6 +96,7 @@ namespace Match3.Presenter
                 {
                     currentFruitType = tile.Fruit;
                     selectedTiles.Add(tile);
+                    OnTileSelected?.Invoke(tile);
                 }
             }
         }
@@ -118,6 +120,7 @@ namespace Match3.Presenter
                             if (!selectedTiles.Contains(tile))
                             {
                                 selectedTiles.Add(tile);
+                                OnTileSelected?.Invoke(tile);
                                 break;
                             }
                         }
@@ -138,11 +141,11 @@ namespace Match3.Presenter
                 {
                     tile.SetSelected(true);
                 }
-                OnTilesSelected?.Invoke(new List<Tile>(selectedTiles));
                 selectedTiles.Clear();
             }
             else
             {
+                OnTilesDeSelected?.Invoke(selectedTiles);
                 selectedTiles.Clear();
             }
             
