@@ -1,6 +1,8 @@
 ﻿using DG.Tweening;
+using Match3.Helpers;
 using Match3.Model;
 using Match3.Presenter;
+using Match3.SO;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +21,9 @@ namespace Match3.View
         [SerializeField] private TileView tilePrefab;
         [SerializeField] private Transform tilesParent;
         [SerializeField] private GridPresenter gridPresenter;
+        [SerializeField] private GameObject gridPrefab;
+        [SerializeField] private Transform gridsParent;
+        [SerializeField] private GridDataSO[] grids;
 
         private TileView[,] tileViews;
 
@@ -69,8 +74,14 @@ namespace Match3.View
 
         private TileView CreateTileView(Vector2Int gridPosition, Vector2 worldPosition, Sprite sprite,Vector3 scale, string fruitName, float tileSize)
         {
+
+            GameObject grid = Instantiate(gridPrefab, gridsParent);
+            grid.GetComponent<SpriteRenderer>().sprite = GridPicker.GetGrid(gridPosition, new Vector2Int(GridWidth,GridHeight), grids).Sprite;
+            grid.transform.position = worldPosition;
+            grid.transform.name = $"Grid ({gridPosition.x},{gridPosition.y})";
+            grid.transform.localScale = scale * 7.5f;
+
             TileView newTileView = Instantiate(tilePrefab, tilesParent);
-            
             newTileView.SetGridPosition(gridPosition);
             newTileView.SetWorldPosition(worldPosition);
             newTileView.SetSprite(sprite);
