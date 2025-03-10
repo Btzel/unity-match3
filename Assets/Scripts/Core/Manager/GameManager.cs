@@ -18,7 +18,7 @@ namespace Match3.Manager
         [SerializeField] private Vector2 gridEndPos;
 
         [Header("Tile Settings")]
-        [SerializeField] private FruitDataSO[] fruits;
+        public FruitDataSO[] fruits;
 
         private void Awake()
         {

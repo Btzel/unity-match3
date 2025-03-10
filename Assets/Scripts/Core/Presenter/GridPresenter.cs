@@ -27,7 +27,7 @@ namespace Match3.Presenter
             inputHandler.OnSelectionEnd += HandleSelectionEnd;
             inputHandler.OnDestroySelectedTiles += HandleDestroySelectedTiles;
 
-            logicalGrid.OnTilesShifted += OnTilesShifted;
+            
             logicalGrid.OnColumnShifted += OnColumnShifted;
         }
 
@@ -36,14 +36,11 @@ namespace Match3.Presenter
             visualGrid.UpdateTileColumn(list);
         }
 
-        private void OnTilesShifted()
-        {
-            visualGrid.UpdateTileVisual();
-        }
+        
 
-        private void HandleDestroySelectedTiles()
+        private void HandleDestroySelectedTiles(FruitDataSO[] fruits)
         {
-            logicalGrid.ShiftSelectedTilesUp(); 
+            logicalGrid.ShiftSelectedTilesUp(fruits); 
         }
 
         private void OnDestroy()
@@ -53,7 +50,7 @@ namespace Match3.Presenter
             inputHandler.OnSelectionEnd -= HandleSelectionEnd;
             inputHandler.OnDestroySelectedTiles -= HandleDestroySelectedTiles;
 
-            logicalGrid.OnTilesShifted -= OnTilesShifted;
+            
             logicalGrid.OnColumnShifted -= OnColumnShifted;
         }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Match3.Manager;
+using Match3.SO;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,13 +12,14 @@ namespace Match3.InputH
         public event Action<Vector2> OnSelectionStart;
         public event Action<Vector2> OnSelectionContinue;
         public event Action OnSelectionEnd;
-        public event Action OnDestroySelectedTiles;
+        public event Action<FruitDataSO[]> OnDestroySelectedTiles;
 
         [SerializeField] private Button destroyButton;
+        [SerializeField] private GameManager manager;
 
         private void Start()
         {
-            destroyButton.onClick.AddListener(() => OnDestroySelectedTiles?.Invoke());
+            destroyButton.onClick.AddListener(() => OnDestroySelectedTiles?.Invoke(manager.fruits));
         }
 
         private void Update()

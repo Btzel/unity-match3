@@ -106,43 +106,31 @@ namespace Match3.View
         {
             List<TileView> tileViewColumn = new List<TileView>();
             int x = tileList[0].PositionX;
-            for(int y = 0; y < tileList.Count; y++)
+            float tileSize = CalculateTileSize(GridWidth, GridHeight, GridStartPos, GridEndPos);
+            for (int y = 0; y < tileList.Count; y++)
             {
                 tileViewColumn.Add(tileViews[x, y]);
             }
-
+            Vector2 startPos = CalculateStartPos(GridWidth, GridHeight, GridStartPos, GridEndPos, tileSize);
+            Vector2 gridPos = CalculateTileViewPos(new Vector2Int(x, GridHeight), startPos, tileSize);
             for (int y = 0; y < tileList.Count; y++)
             {
                 Tile tile = tileList[y];
                 tileViews[x, y] = tileViewColumn[tile.PositionY];
-            }
-
-            for (int y = 0; y < tileList.Count; y++)
-            {
-                Tile tile = tileList[y];
-                tileViews[x, y].SetGridPosition(new Vector2Int(x,y));
-            }
-
-
-
-        }
-        public void UpdateTileVisual()
-        {
-            for(int x = 0; x < GridWidth; x++)
-            {
-                for(int y = 0; y < GridHeight; y++)
+                tileViews[x, y].SetGridPosition(new Vector2Int(x, y));
+                if (tile.IsSelected)
                 {
-                    TileView tileView = GetTileView(x, y);
-                    if(tileView != null)
-                    {
-                        float tileSize = CalculateTileSize(GridWidth, GridHeight, GridStartPos, GridEndPos);
-                        Vector2 startPos = CalculateStartPos(GridWidth, GridHeight, GridStartPos, GridEndPos, tileSize);
-                        Vector2 targetPos = CalculateTileViewPos(new Vector2Int(tileView.GridPositionX,tileView.GridPositionY), startPos, tileSize);
-                        tileView.transform.DOMove(targetPos, 0.5f).SetEase(Ease.OutBounce);
-                    }
+                    tile.SetSelected(false);
+
+                    tileViews[x, y].transform.position = gridPos;
+                    tileViews[x, y].spriteRenderer.sprite = tile.Fruit.Sprite;
                 }
+                Vector2 targetPos = CalculateTileViewPos(new Vector2Int(x, y), startPos, tileSize);
+                tileViews[x, y].transform.DOMove(targetPos, 1f).SetEase(Ease.OutQuint);
+                tileViews[x, y].transform.name = $"{tile.Fruit.name} ({x}, {y})";
             }
         }
+        
 
         public float CalculateTileSize(int gridWidth, int gridHeight, Vector2 startPos, Vector2 endPos)
         {

@@ -8,7 +8,6 @@ namespace Match3.Model
 {
     public class LogicalGrid
     {
-        public event Action OnTilesShifted;
         public event Action<List<Tile>> OnColumnShifted;
 
         public int GridWidth { get; private set; }
@@ -85,7 +84,7 @@ namespace Match3.Model
 
         }
 
-        public void ShiftSelectedTilesUp()
+        public void ShiftSelectedTilesUp(FruitDataSO[] fruits)
         {
             for (int x = 0; x < GridWidth; x++)
             {
@@ -95,15 +94,23 @@ namespace Match3.Model
                     columnTiles.Add(Tiles[x, y]);
                 }
                 columnTiles.Sort((a, b) => a.IsSelected.CompareTo(b.IsSelected));
-                OnColumnShifted?.Invoke(columnTiles);
+                
                 for (int y = 0; y < GridHeight; y++)
                 {
                     Tiles[x, y] = columnTiles[y];
+                    if (Tiles[x,y].IsSelected)
+                    {
+                        Tiles[x, y].SetFruit(fruits[UnityEngine.Random.Range(0, fruits.Length)]);
+                    }
+                }
+                OnColumnShifted?.Invoke(columnTiles);
+                for (int y = 0; y < GridHeight; y++)
+                {
                     Tiles[x, y].SetPosition(x, y);
                 }
 
+
             }
-            OnTilesShifted?.Invoke();
         }
     }
 }
