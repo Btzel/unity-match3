@@ -79,7 +79,7 @@ namespace Match3.View
             grid.GetComponent<SpriteRenderer>().sprite = GridPicker.GetGrid(gridPosition, new Vector2Int(GridWidth,GridHeight), grids).Sprite;
             grid.transform.position = worldPosition;
             grid.transform.name = $"Grid ({gridPosition.x},{gridPosition.y})";
-            grid.transform.localScale = scale * 7.5f;
+            grid.transform.localScale = scale;
 
             TileView newTileView = Instantiate(tilePrefab, tilesParent);
             newTileView.SetGridPosition(gridPosition);
