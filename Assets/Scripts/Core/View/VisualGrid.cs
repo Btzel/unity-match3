@@ -59,8 +59,8 @@ namespace Match3.View
                 GameObject lineObj = new GameObject("DynamicLine");
                 LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
                 lineRenderer.transform.parent = lineParentObj.transform;
-                lineRenderer.startWidth = 0.1f;
-                lineRenderer.endWidth = 0.1f;
+                lineRenderer.startWidth = 0.3f;
+                lineRenderer.endWidth = 0.3f;
                 lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
                 lineRenderer.positionCount = 0;
                 lineRenderer.sortingOrder = -5;
