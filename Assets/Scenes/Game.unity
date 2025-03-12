@@ -498,7 +498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridPresenter: {fileID: 745254328}
   visualGrid: {fileID: 1688437383}
-  gridSize: {x: 5, y: 10}
+  gridSize: {x: 5, y: 5}
   gridStartPos: {x: -8, y: -5}
   gridEndPos: {x: 8, y: 5}
   fruits:

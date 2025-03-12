@@ -1,8 +1,11 @@
-using Match3.SO;
+﻿using Match3.SO;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Unity.Mathematics;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 
 namespace Match3.Model
@@ -31,6 +34,8 @@ namespace Match3.Model
                     CreateTile(x, y, false, randomFruit);
                 }
             }
+
+            GetPossibleSelections();
         }
 
         private void CreateTile(int x, int y, bool isSelected, FruitDataSO fruit)
@@ -74,7 +79,7 @@ namespace Match3.Model
                 if (newX >= 0 && newY >= 0 && newX < GridWidth && newY < GridHeight)
                 {
                     Tile neighbor = GetTile(newX, newY);
-                    if (neighbor != null)
+                    if (neighbor != null && neighbor.Fruit == tile.Fruit)
                     {
                         neighbors.Add(neighbor);
                     }
@@ -84,7 +89,127 @@ namespace Match3.Model
             return neighbors;
         }
 
-        
+        public bool IsNeighbor(Tile tile1, Tile tile2)
+        {
+            int[,] directions = new int[,]
+            {
+        {-1,-1 },
+        {-1, 0 },
+        {-1, 1 },
+        { 0,-1 },
+        { 0, 1 },
+        { 1,-1 },
+        { 1, 0 },
+        { 1, 1 }
+            };
+
+            for (int i = 0; i < directions.GetLength(0); i++)
+            {
+                int newX = tile1.PositionX + directions[i, 0];
+                int newY = tile1.PositionY + directions[i, 1];
+
+                if (newX == tile2.PositionX && newY == tile2.PositionY)
+                {
+                    return tile1.Fruit == tile2.Fruit;
+                }
+            }
+            return false;
+        }
+
+
+        public List<List<Tile>> GetPossibleSelections()
+        {
+            List<List<Tile>> possibleSelections = new List<List<Tile>>();
+
+            for (int x = 0; x < GridWidth; x++)
+            {
+                for (int y = 0; y < GridHeight; y++)
+                {
+                    List<Tile> possibleSelection = new List<Tile>();
+                    Tile tile = Tiles[x, y];
+                    List<Tile> neighbors = GetNeighbors(tile);
+
+                    if(possibleSelections.Count > 0)
+                    {
+                        bool isNeighbor = false;
+                        foreach (List<Tile> selection in possibleSelections)
+                        {
+                            foreach (Tile tileInSelection in selection)
+                            {
+                                if (neighbors.Contains(tileInSelection))
+                                {
+                                    isNeighbor = true;
+                                    selection.Add(tile);
+                                    break;
+                                }     
+                            }
+                            if (isNeighbor)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (!isNeighbor)
+                        {
+                            possibleSelection.Add(tile);
+                            possibleSelections.Add(possibleSelection);
+                        }
+
+                    }
+                    else
+                    {
+                        possibleSelection.Add(tile);
+                        possibleSelections.Add(possibleSelection);
+                    }
+                }
+            }
+
+
+            for (int i = 0; i < possibleSelections.Count; i++)
+            {
+                for (int j = i + 1; j < possibleSelections.Count; j++)
+                {
+                    bool merged = false;
+
+                    for (int k = 0; k < possibleSelections[i].Count; k++)
+                    {
+                        for (int l = 0; l < possibleSelections[j].Count; l++)
+                        {
+                            if (IsNeighbor(possibleSelections[i][k], possibleSelections[j][l]))
+                            {
+                                possibleSelections[i].AddRange(possibleSelections[j]);
+                                possibleSelections.RemoveAt(j);
+                                merged = true;
+                                break;
+                            }
+                        }
+
+                        if (merged)
+                            break;
+                    }
+                    if (merged)
+                    {
+                        j--;
+                    }
+                }
+            }
+            possibleSelections = possibleSelections.OrderByDescending(s => s.Count).ToList();
+
+            int tileCount = 0;
+            foreach (List<Tile> selection in possibleSelections)
+            {
+                foreach (Tile tileInSelection in selection)
+                {
+                    Debug.Log(tileInSelection.Fruit.name + " " + tileInSelection.PositionX + " " + tileInSelection.PositionY);
+                    tileCount++;
+                }
+
+                Debug.Log("---------------------------------------------");
+            }
+            Debug.Log(tileCount);
+
+            return possibleSelections;
+        }
 
         public List<Tile> GetSelectedTiles()
         {
@@ -129,6 +254,7 @@ namespace Match3.Model
 
 
             }
+            GetPossibleSelections();
         }
     }
 }
