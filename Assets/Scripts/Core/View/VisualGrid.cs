@@ -5,6 +5,7 @@ using Match3.Presenter;
 using Match3.SO;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Match3.View
@@ -24,20 +25,72 @@ namespace Match3.View
         [SerializeField] private GameObject gridPrefab;
         [SerializeField] private Transform gridsParent;
         [SerializeField] private GridDataSO[] grids;
+        [SerializeField] private Transform lineRenderersParent;
 
         private TileView[,] tileViews;
+        private List<GameObject> lineParents = new List<GameObject>();
 
         private void Start()
         {
             gridPresenter = FindFirstObjectByType<GridPresenter>();
             gridPresenter.OnTileSelected += AnimateSelectedTile;
             gridPresenter.OnTilesDeSelected += AnimateDeSelectedTiles;
+            gridPresenter.OnCreateLineRenderer += CreateLineRenderer;
+            gridPresenter.OnDestroyLineRenderer += DestroyLineRenderer;
+        }
+
+        private void DestroyLineRenderer()
+        {
+            if(lineParents.Count > 0)
+            {
+                foreach(GameObject lineParent in lineParents)
+                {
+                    Destroy(lineParent);
+                }
+            }
+        }
+
+        private void CreateLineRenderer(List<Tile> tileList)
+        {
+            GameObject lineParentObj = new GameObject("DynamicLineParent");
+            lineParentObj.transform.parent = lineRenderersParent;
+            foreach (Tile tile in tileList)
+            { 
+                GameObject lineObj = new GameObject("DynamicLine");
+                LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
+                lineRenderer.transform.parent = lineParentObj.transform;
+                lineRenderer.startWidth = 0.1f;
+                lineRenderer.endWidth = 0.1f;
+                lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+                lineRenderer.positionCount = 0;
+                lineRenderer.sortingOrder = -5;
+                lineRenderer.startColor = new Color(87f / 255f, 78f / 255f, 132f / 255f);
+                lineRenderer.endColor = new Color(87f / 255f, 78f / 255f, 132f / 255f);
+                TileView mainTileView = GetTileView(tile.PositionX, tile.PositionY);
+
+                List<Tile> neighbors = gridPresenter.GetNeighborsAt(tile);
+                foreach(Tile neighbor in neighbors)
+                {
+                    if(neighbor.Fruit == tile.Fruit && tileList.Contains(neighbor))
+                    {
+                        lineRenderer.positionCount++;
+                        lineRenderer.SetPosition(lineRenderer.positionCount - 1, mainTileView.transform.position);
+
+                        TileView neighborTileView = GetTileView(neighbor.PositionX, neighbor.PositionY);
+                        lineRenderer.positionCount++;
+                        lineRenderer.SetPosition(lineRenderer.positionCount - 1, neighborTileView.transform.position);
+                    }
+                }
+            }
+            lineParents.Add(lineParentObj.gameObject);
         }
 
         private void OnDestroy()
         {
             gridPresenter.OnTileSelected -= AnimateSelectedTile;
             gridPresenter.OnTilesDeSelected -= AnimateDeSelectedTiles;
+            gridPresenter.OnCreateLineRenderer -= CreateLineRenderer;
+            gridPresenter.OnDestroyLineRenderer -= DestroyLineRenderer;
         }
 
         

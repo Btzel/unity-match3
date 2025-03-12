@@ -15,7 +15,7 @@ namespace Match3.Helpers
             else if (gridPos.x == gridSize.x - 1 && gridPos.y != 0 && gridPos.y != gridSize.y - 1) { return grids[5]; } // Right Grid
             else if (gridPos.x == gridSize.x - 1 && gridPos.y == gridSize.y - 1) { return grids[6]; } // Top Right Grid
             else if (gridPos.x != 0 && gridPos.x != gridSize.x - 1 && gridPos.y == gridSize.y - 1) { return grids[7]; } // Top Grid
-            else { return grids[8]; }
+            else { return grids[8]; } // Center Grid
         }
     }
 }
