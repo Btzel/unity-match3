@@ -210,25 +210,28 @@ namespace Match3.View
                 tileViewColumn.Add(tileViews[x, y]);
             }
             Vector2 startPos = CalculateStartPos(GridWidth, GridHeight, GridStartPos, GridEndPos, tileSize);
-            Vector2 gridPos = CalculateTileViewPos(new Vector2Int(x, GridHeight + 5), startPos, tileSize);
-            float duration = .5f;
+            
+            float animationSpeed = 15f;
+            int tilePos = 0;
             for (int y = 0; y < tileList.Count; y++)
             {
                 Tile tile = tileList[y];
                 tileViews[x, y] = tileViewColumn[tile.PositionY];
                 tileViews[x, y].SetGridPosition(new Vector2Int(x, y));
+                
                 if (tile.IsSelected)
                 {
                     tile.SetSelected(false);
-
+                    Vector2 gridPos = CalculateTileViewPos(new Vector2Int(x, GridHeight + tilePos), startPos, tileSize);
+                    tilePos++;
                     tileViews[x, y].transform.position = gridPos;
                     tileViews[x, y].spriteRenderer.sprite = tile.Fruit.Sprite;
                     tileViews[x, y].transform.localScale = tileViews[x, y].DefaultScale;
                 }
                 Vector2 targetPos = CalculateTileViewPos(new Vector2Int(x, y), startPos, tileSize);
-                tileViews[x, y].transform.DOMove(targetPos, duration).SetEase(Ease.OutQuint);
+                tileViews[x, y].transform.DOMove(targetPos, animationSpeed).SetSpeedBased();
                 tileViews[x, y].transform.name = $"{tile.Fruit.name} ({x}, {y})";
-     
+                
             }
         }
 

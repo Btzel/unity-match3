@@ -93,14 +93,14 @@ namespace Match3.Model
         {
             int[,] directions = new int[,]
             {
-        {-1,-1 },
-        {-1, 0 },
-        {-1, 1 },
-        { 0,-1 },
-        { 0, 1 },
-        { 1,-1 },
-        { 1, 0 },
-        { 1, 1 }
+                {-1,-1 },
+                {-1, 0 },
+                {-1, 1 },
+                { 0,-1 },
+                { 0, 1 },
+                { 1,-1 },
+                { 1, 0 },
+                { 1, 1 }
             };
 
             for (int i = 0; i < directions.GetLength(0); i++)
@@ -193,6 +193,16 @@ namespace Match3.Model
                     }
                 }
             }
+
+            for (int i = possibleSelections.Count - 1; i >= 0; i--)
+            {
+                if (possibleSelections[i].Count < 3)
+                {
+                    possibleSelections.RemoveAt(i);
+                }
+            }
+
+
             possibleSelections = possibleSelections.OrderByDescending(s => s.Count).ToList();
 
             int tileCount = 0;
