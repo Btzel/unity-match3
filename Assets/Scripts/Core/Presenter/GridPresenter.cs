@@ -21,6 +21,7 @@ namespace Match3.Presenter
         private FruitDataSO currentFruitType;
         private InputHandler inputHandler;
         private List<Tile> selectedTiles = new List<Tile>();
+        private List<Tile> selectedSwapTiles = new List<Tile>();
 
         private void Start()
         {
@@ -29,9 +30,16 @@ namespace Match3.Presenter
             inputHandler.OnSelectionContinue += HandleSelectionContinue;
             inputHandler.OnSelectionEnd += HandleSelectionEnd;
             inputHandler.OnDestroySelectedTiles += HandleDestroySelectedTiles;
-
+            inputHandler.OnSwapTile += HandleSwapTile;
             
             logicalGrid.OnColumnShifted += OnColumnShifted;
+            logicalGrid.OnTilesSwapped += OnTilesSwapped;
+        }
+
+        private void OnTilesSwapped(Tile[] tiles)
+        {
+            StartCoroutine(visualGrid.UpdateSwappedTiles(tiles));
+            
         }
 
         private void OnColumnShifted(List<Tile> list)
@@ -60,6 +68,7 @@ namespace Match3.Presenter
 
             
             logicalGrid.OnColumnShifted -= OnColumnShifted;
+            logicalGrid.OnTilesSwapped += OnTilesSwapped;
         }
 
         public void InitializeGrid(VisualGrid visualGrid,Vector2Int gridSize,Vector2 gridStartPos, Vector2 gridEndPos, FruitDataSO[] fruits)
@@ -84,10 +93,47 @@ namespace Match3.Presenter
         // get Tile Neighbors
         public List<Tile> GetNeighborsAt(Tile tile)
         {
-            return logicalGrid.GetNeighbors(tile);
+            return logicalGrid.GetFruitNeighbors(tile);
         }
 
+        public void HandleSwapTile(Vector2 worldPosition)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
+            if (hit.collider != null && hit.collider.CompareTag("TileView"))
+            {
+                TileView tileView = hit.collider.GetComponent<TileView>();
+                Tile tile = GetTileAt(tileView.GridPositionX, tileView.GridPositionY);
+                if (!tile.IsSelected)
+                {
+                    if(selectedSwapTiles.Count == 0)
+                    {
+                        selectedSwapTiles.Add(tile);
+                        OnTileSelected?.Invoke(tile);
+                    }
+                    else
+                    {
+                        List<Tile> neighbors = logicalGrid.GetAllNeighbors(selectedSwapTiles[0]);
+                        if (neighbors.Contains(tile))
+                        {
+                            selectedSwapTiles.Add(tile);
+                            OnTileSelected?.Invoke(tile);
+                        }
+                        else
+                        {
+                            OnTilesDeSelected?.Invoke(selectedSwapTiles);
+                            selectedSwapTiles.Clear();
+                        }
+                    }
+                }
 
+                if(selectedSwapTiles.Count == 2)
+                {
+                    logicalGrid.SwapTiles(selectedSwapTiles[0], selectedSwapTiles[1]);
+                    selectedSwapTiles.Clear();
+                }
+                
+            }
+        }
 
 
         public void HandleSelectionStart(Vector2 worldPosition)

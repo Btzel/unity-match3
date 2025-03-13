@@ -4,9 +4,13 @@ using Match3.Model;
 using Match3.Presenter;
 using Match3.SO;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
+using UnityEngine.U2D;
+using UnityEngine.UIElements;
 
 namespace Match3.View
 {
@@ -235,8 +239,61 @@ namespace Match3.View
             }
         }
 
+        public IEnumerator UpdateSwappedTiles(Tile[] tiles)
+        {
+            Tile tile1 = tiles[0];
+            Tile tile2 = tiles[1];
 
-        
+            TileView tileView1 = GetTileView(tile1.PositionX, tile1.PositionY);
+            TileView tileView2 = GetTileView(tile2.PositionX, tile2.PositionY);
+
+            tileViews[tile1.PositionX, tile1.PositionY] = tileView2;
+            tileViews[tile2.PositionX, tile2.PositionY] = tileView1;
+
+            tileViews[tile1.PositionX, tile1.PositionY].SetGridPosition(new Vector2Int(tile1.PositionX,tile1.PositionY));
+            tileViews[tile2.PositionX, tile2.PositionY].SetGridPosition(new Vector2Int(tile2.PositionX, tile2.PositionY));
+
+            Vector2Int gridPosition1 = new Vector2Int(tileView1.GridPositionX, tileView1.GridPositionY);
+            Vector2Int gridPosition2 = new Vector2Int(tileView2.GridPositionX, tileView2.GridPositionY);
+
+            float tileSize = CalculateTileSize(GridWidth, GridHeight, GridStartPos, GridEndPos);
+
+            Vector2 newStartPos = CalculateStartPos(GridWidth, GridHeight, GridStartPos, GridEndPos, tileSize);
+
+
+            Vector2 tilePosition1 = CalculateTileViewPos(gridPosition1, newStartPos, tileSize);
+            Vector2 tilePosition2 = CalculateTileViewPos(gridPosition2, newStartPos, tileSize);
+
+            tileView1.SetWorldPosition(tilePosition1);
+            tileView2.SetWorldPosition(tilePosition2);
+
+            tileView1.transform.name = $"{tile1.Fruit.name} ({gridPosition1.x}, {gridPosition1.y})";
+            tileView2.transform.name = $"{tile2.Fruit.name} ({gridPosition2.x}, {gridPosition2.y})";
+
+
+            bool vanish1Complete = false;
+            bool vanish2Complete = false;
+
+            tileView1.PlaySwapAnimationVanish(() => vanish1Complete = true);
+            tileView2.PlaySwapAnimationVanish(() => vanish2Complete = true);
+
+            yield return new WaitUntil(() => vanish1Complete && vanish2Complete);
+
+            tileView1.transform.position = tilePosition1;
+            tileView2.transform.position = tilePosition2;
+
+            bool appear1Complete = false;
+            bool appear2Complete = false;
+
+            tileView1.PlaySwapAnimationAppear(() => appear1Complete = true);
+            tileView2.PlaySwapAnimationAppear(() => appear2Complete = true);
+
+            yield return new WaitUntil(() => appear1Complete && appear2Complete);
+
+        }
+
+
+
 
         public float CalculateTileSize(int gridWidth, int gridHeight, Vector2 startPos, Vector2 endPos)
         {
@@ -266,5 +323,7 @@ namespace Match3.View
 
             return new Vector2(posX, posY);
         }
+
+        
     }
 }

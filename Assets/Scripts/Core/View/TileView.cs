@@ -52,6 +52,20 @@ namespace Match3.View
                 .OnComplete(() => onComplete?.Invoke());
         }
 
+        public void PlaySwapAnimationVanish(Action onComplete)
+        {
+            transform.DOScale(Vector3.zero, 0.3f)
+                .SetEase(Ease.InBack)
+                .OnComplete(() => onComplete?.Invoke());
+        }
+
+        public void PlaySwapAnimationAppear(Action onComplete)
+        {
+            transform.DOScale(DefaultScale, 0.3f)
+                .SetEase(Ease.InBack)
+                .OnComplete(() => onComplete?.Invoke());
+        }
+
         public void PlaySelectedAnimation()
         {
             transform.DOScale(new Vector3(DefaultScale.x * 1.15f,

@@ -2,10 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
+
 
 
 namespace Match3.Model
@@ -13,6 +12,7 @@ namespace Match3.Model
     public class LogicalGrid
     {
         public event Action<List<Tile>> OnColumnShifted;
+        public event Action<Tile[]> OnTilesSwapped;
 
         public int GridWidth { get; private set; }
         public int GridHeight { get; private set; }
@@ -55,7 +55,7 @@ namespace Match3.Model
             }
         }
 
-        public List<Tile> GetNeighbors(Tile tile)
+        public List<Tile> GetFruitNeighbors(Tile tile)
         {
             int[,] directions = new int[,]
             {
@@ -89,7 +89,41 @@ namespace Match3.Model
             return neighbors;
         }
 
-        public bool IsNeighbor(Tile tile1, Tile tile2)
+        public List<Tile> GetAllNeighbors(Tile tile)
+        {
+            int[,] directions = new int[,]
+            {
+                {-1,-1 },
+                {-1, 0 },
+                {-1, 1 },
+                { 0,-1 },
+                { 0, 1 },
+                { 1,-1 },
+                { 1, 0 },
+                { 1, 1 }
+            };
+
+            List<Tile> neighbors = new List<Tile>();
+
+            for (int i = 0; i < directions.GetLength(0); i++)
+            {
+                int newX = tile.PositionX + directions[i, 0];
+                int newY = tile.PositionY + directions[i, 1];
+
+                if (newX >= 0 && newY >= 0 && newX < GridWidth && newY < GridHeight)
+                {
+                    Tile neighbor = GetTile(newX, newY);
+                    if (neighbor != null)
+                    {
+                        neighbors.Add(neighbor);
+                    }
+                }
+            }
+
+            return neighbors;
+        }
+
+        public bool IsFruitNeighbor(Tile tile1, Tile tile2)
         {
             int[,] directions = new int[,]
             {
@@ -127,7 +161,7 @@ namespace Match3.Model
                 {
                     List<Tile> possibleSelection = new List<Tile>();
                     Tile tile = Tiles[x, y];
-                    List<Tile> neighbors = GetNeighbors(tile);
+                    List<Tile> neighbors = GetFruitNeighbors(tile);
 
                     if(possibleSelections.Count > 0)
                     {
@@ -175,7 +209,7 @@ namespace Match3.Model
                     {
                         for (int l = 0; l < possibleSelections[j].Count; l++)
                         {
-                            if (IsNeighbor(possibleSelections[i][k], possibleSelections[j][l]))
+                            if (IsFruitNeighbor(possibleSelections[i][k], possibleSelections[j][l]))
                             {
                                 possibleSelections[i].AddRange(possibleSelections[j]);
                                 possibleSelections.RemoveAt(j);
@@ -265,6 +299,23 @@ namespace Match3.Model
 
             }
             GetPossibleSelections();
+        }
+
+        public void SwapTiles(Tile tile1, Tile tile2)
+        {
+            int tile1X = tile1.PositionX;
+            int tile1Y = tile1.PositionY;
+            int tile2X = tile2.PositionX;
+            int tile2Y = tile2.PositionY;
+
+            Tiles[tile1X, tile1Y] = tile2;
+            Tiles[tile2X, tile2Y] = tile1;
+
+            Tile[] swappedTiles = { tile1, tile2 };
+            OnTilesSwapped?.Invoke(swappedTiles);
+
+            tile1.SetPosition(tile2X, tile2Y);
+            tile2.SetPosition(tile1X, tile1Y);
         }
     }
 }
