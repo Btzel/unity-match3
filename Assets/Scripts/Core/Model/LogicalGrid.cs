@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -316,6 +315,8 @@ namespace Match3.Model
 
             tile1.SetPosition(tile2X, tile2Y);
             tile2.SetPosition(tile1X, tile1Y);
+
+            GetPossibleSelections();
         }
     }
 }

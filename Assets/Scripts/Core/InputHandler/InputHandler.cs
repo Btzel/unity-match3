@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Match3.InputH
+namespace Match3.Inputs
 {
     public class InputHandler : MonoBehaviour
     {
@@ -42,6 +42,7 @@ namespace Match3.InputH
             }
             
         }
+        #region Helper Functions
         private Vector2 GetMouseWorldPosition()
         {
             return Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -51,5 +52,6 @@ namespace Match3.InputH
         {
             isSwap = swapState;
         }
+        #endregion
     }
 }

@@ -7,7 +7,7 @@ namespace Match3.Helpers
     public class FrameRateManager : MonoBehaviour
     {
         [Header("Frame Settings")]
-        [SerializeField] private float targetFrameRate = 60.0f;
+        [SerializeField] private float targetFrameRate;
 
         private int maxRate = 9999;
         private float currentFrameTime;

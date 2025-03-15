@@ -62,7 +62,7 @@ namespace Match3.View
         public void PlaySwapAnimationAppear(Action onComplete)
         {
             transform.DOScale(DefaultScale, 0.3f)
-                .SetEase(Ease.InBack)
+                .SetEase(Ease.OutBack)
                 .OnComplete(() => onComplete?.Invoke());
         }
 

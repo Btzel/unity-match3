@@ -1,4 +1,4 @@
-﻿using Match3.InputH;
+﻿using Match3.Inputs;
 using Match3.Model;
 using Match3.SO;
 using Match3.View;
@@ -23,31 +23,37 @@ namespace Match3.Presenter
         private List<Tile> selectedTiles = new List<Tile>();
         private List<Tile> selectedSwapTiles = new List<Tile>();
 
+        public void InitializeGrid(VisualGrid visualGrid, Vector2Int gridSize, Vector2 gridStartPos, Vector2 gridEndPos, FruitDataSO[] fruits)
+        {
+            this.visualGrid = visualGrid;
+            logicalGrid = new LogicalGrid();
+            logicalGrid.InitializeGrid(gridSize.x, gridSize.y, fruits);
+            visualGrid.InitializeGrid(logicalGrid, gridStartPos, gridEndPos);
+        }
+
         private void Start()
         {
-            inputHandler = FindFirstObjectByType<InputHandler>(); // InputHandler'ı buluyoruz.
+            inputHandler = FindFirstObjectByType<InputHandler>();
             inputHandler.OnSelectionStart += HandleSelectionStart;
             inputHandler.OnSelectionContinue += HandleSelectionContinue;
             inputHandler.OnSelectionEnd += HandleSelectionEnd;
             inputHandler.OnDestroySelectedTiles += HandleDestroySelectedTiles;
             inputHandler.OnSwapTile += HandleSwapTile;
             
-            logicalGrid.OnColumnShifted += OnColumnShifted;
-            logicalGrid.OnTilesSwapped += OnTilesSwapped;
+            logicalGrid.OnColumnShifted += HandleColumnShift;
+            logicalGrid.OnTilesSwapped += HandleTileSwap;
         }
-
-        private void OnTilesSwapped(Tile[] tiles)
+        #region Event Handlers
+        private void HandleTileSwap(Tile[] tiles)
         {
             StartCoroutine(visualGrid.UpdateSwappedTiles(tiles));
-            
         }
 
-        private void OnColumnShifted(List<Tile> list)
+        private void HandleColumnShift(List<Tile> list)
         {
             visualGrid.UpdateTileColumn(list);
         }
 
-        
 
         private void HandleDestroySelectedTiles(FruitDataSO[] fruits)
         {
@@ -59,43 +65,6 @@ namespace Match3.Presenter
             });
         }
 
-        private void OnDestroy()
-        {
-            inputHandler.OnSelectionStart -= HandleSelectionStart;
-            inputHandler.OnSelectionContinue -= HandleSelectionContinue;
-            inputHandler.OnSelectionEnd -= HandleSelectionEnd;
-            inputHandler.OnDestroySelectedTiles -= HandleDestroySelectedTiles;
-
-            
-            logicalGrid.OnColumnShifted -= OnColumnShifted;
-            logicalGrid.OnTilesSwapped += OnTilesSwapped;
-        }
-
-        public void InitializeGrid(VisualGrid visualGrid,Vector2Int gridSize,Vector2 gridStartPos, Vector2 gridEndPos, FruitDataSO[] fruits)
-        {
-            this.visualGrid = visualGrid;
-            logicalGrid = new LogicalGrid();
-            logicalGrid.InitializeGrid(gridSize.x, gridSize.y, fruits);
-            visualGrid.InitializeGrid(logicalGrid, gridStartPos, gridEndPos);
-        }
-
-        // Get Visual and Logical Tiles
-        public Tile GetTileAt(int x, int y)
-        {
-            return logicalGrid.GetTile(x, y);
-        }
-
-        public TileView GetTileViewAt(int x, int y)
-        {
-            return visualGrid.GetTileView(x, y);
-        }
-
-        // get Tile Neighbors
-        public List<Tile> GetNeighborsAt(Tile tile)
-        {
-            return logicalGrid.GetFruitNeighbors(tile);
-        }
-
         public void HandleSwapTile(Vector2 worldPosition)
         {
             RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
@@ -105,7 +74,7 @@ namespace Match3.Presenter
                 Tile tile = GetTileAt(tileView.GridPositionX, tileView.GridPositionY);
                 if (!tile.IsSelected)
                 {
-                    if(selectedSwapTiles.Count == 0)
+                    if (selectedSwapTiles.Count == 0)
                     {
                         selectedSwapTiles.Add(tile);
                         OnTileSelected?.Invoke(tile);
@@ -125,13 +94,11 @@ namespace Match3.Presenter
                         }
                     }
                 }
-
-                if(selectedSwapTiles.Count == 2)
+                if (selectedSwapTiles.Count == 2)
                 {
                     logicalGrid.SwapTiles(selectedSwapTiles[0], selectedSwapTiles[1]);
                     selectedSwapTiles.Clear();
                 }
-                
             }
         }
 
@@ -179,14 +146,11 @@ namespace Match3.Presenter
 
                     }
                 }
-
-
             }
-            
         }
         public void HandleSelectionEnd()
         {
-            
+
             if (selectedTiles.Count >= 3)
             {
                 OnCreateLineRenderer?.Invoke(selectedTiles);
@@ -201,7 +165,37 @@ namespace Match3.Presenter
                 OnTilesDeSelected?.Invoke(selectedTiles);
                 selectedTiles.Clear();
             }
-            
+
         }
+#endregion
+
+        private void OnDestroy()
+        {
+            inputHandler.OnSelectionStart -= HandleSelectionStart;
+            inputHandler.OnSelectionContinue -= HandleSelectionContinue;
+            inputHandler.OnSelectionEnd -= HandleSelectionEnd;
+            inputHandler.OnDestroySelectedTiles -= HandleDestroySelectedTiles;
+            inputHandler.OnSwapTile -= HandleSwapTile;
+
+            logicalGrid.OnColumnShifted -= HandleColumnShift;
+            logicalGrid.OnTilesSwapped -= HandleTileSwap;
+        }
+
+        #region Helper Functions
+        public Tile GetTileAt(int x, int y)
+        {
+            return logicalGrid.GetTile(x, y);
+        }
+
+        public TileView GetTileViewAt(int x, int y)
+        {
+            return visualGrid.GetTileView(x, y);
+        }
+
+        public List<Tile> GetNeighborsAt(Tile tile)
+        {
+            return logicalGrid.GetFruitNeighbors(tile);
+        }
+        #endregion
     }
 }

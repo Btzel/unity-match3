@@ -6,11 +6,8 @@ using Match3.SO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.U2D.Aseprite;
 using UnityEngine;
-using UnityEngine.U2D;
-using UnityEngine.UIElements;
+
 
 namespace Match3.View
 {
@@ -215,7 +212,7 @@ namespace Match3.View
             }
             Vector2 startPos = CalculateStartPos(GridWidth, GridHeight, GridStartPos, GridEndPos, tileSize);
             
-            float animationSpeed = 15f;
+            float animationSpeed = 20f;
             int tilePos = 0;
             for (int y = 0; y < tileList.Count; y++)
             {
