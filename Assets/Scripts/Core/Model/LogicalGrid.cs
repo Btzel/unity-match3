@@ -17,7 +17,6 @@ namespace Match3.Model
         public int GridHeight { get; private set; }
         public FruitDataSO[] Fruits;
         public Tile[,] Tiles;
-
         public void InitializeGrid(int gridWidth, int gridHeight, FruitDataSO[] fruits)
         {
             GridWidth = gridWidth;
@@ -33,8 +32,6 @@ namespace Match3.Model
                     CreateTile(x, y, false, randomFruit);
                 }
             }
-
-            GetPossibleSelections();
         }
 
         private void CreateTile(int x, int y, bool isSelected, FruitDataSO fruit)
@@ -237,20 +234,6 @@ namespace Match3.Model
 
 
             possibleSelections = possibleSelections.OrderByDescending(s => s.Count).ToList();
-
-            int tileCount = 0;
-            foreach (List<Tile> selection in possibleSelections)
-            {
-                foreach (Tile tileInSelection in selection)
-                {
-                    Debug.Log(tileInSelection.Fruit.name + " " + tileInSelection.PositionX + " " + tileInSelection.PositionY);
-                    tileCount++;
-                }
-
-                Debug.Log("---------------------------------------------");
-            }
-            Debug.Log(tileCount);
-
             return possibleSelections;
         }
 
@@ -297,7 +280,6 @@ namespace Match3.Model
 
 
             }
-            GetPossibleSelections();
         }
 
         public void SwapTiles(Tile tile1, Tile tile2)
@@ -316,7 +298,6 @@ namespace Match3.Model
             tile1.SetPosition(tile2X, tile2Y);
             tile2.SetPosition(tile1X, tile1Y);
 
-            GetPossibleSelections();
         }
     }
 }

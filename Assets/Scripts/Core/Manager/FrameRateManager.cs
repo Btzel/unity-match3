@@ -2,7 +2,7 @@ using System.Collections;
 using System.Threading;
 using UnityEngine;
 
-namespace Match3.Helpers
+namespace Match3.Manager
 {
     public class FrameRateManager : MonoBehaviour
     {

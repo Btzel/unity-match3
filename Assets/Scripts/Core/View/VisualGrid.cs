@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using JetBrains.Annotations;
 using Match3.Helpers;
 using Match3.Model;
 using Match3.Presenter;
@@ -53,36 +54,48 @@ namespace Match3.View
 
         private void CreateLineRenderer(List<Tile> tileList)
         {
+            if (tileList == null || tileList.Count < 2) return;
+
             GameObject lineParentObj = new GameObject("DynamicLineParent");
             lineParentObj.transform.parent = lineRenderersParent;
-            foreach (Tile tile in tileList)
-            { 
-                GameObject lineObj = new GameObject("DynamicLine");
-                LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
-                lineRenderer.transform.parent = lineParentObj.transform;
-                lineRenderer.startWidth = 0.3f;
-                lineRenderer.endWidth = 0.3f;
-                lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-                lineRenderer.positionCount = 0;
-                lineRenderer.sortingOrder = -5;
-                lineRenderer.startColor = new Color(87f / 255f, 78f / 255f, 132f / 255f);
-                lineRenderer.endColor = new Color(87f / 255f, 78f / 255f, 132f / 255f);
-                TileView mainTileView = GetTileView(tile.PositionX, tile.PositionY);
 
+            foreach (Tile tile in tileList)
+            {
+                TileView mainTileView = GetTileView(tile.PositionX, tile.PositionY);
                 List<Tile> neighbors = gridPresenter.GetNeighborsAt(tile);
-                foreach(Tile neighbor in neighbors)
+                float baseWidth = mainTileView.transform.localScale.x * .55f;
+                foreach (Tile neighbor in neighbors)
                 {
-                    if(neighbor.Fruit == tile.Fruit && tileList.Contains(neighbor))
+                    if (neighbor.Fruit == tile.Fruit && tileList.Contains(neighbor))
                     {
-                        lineRenderer.positionCount++;
-                        lineRenderer.SetPosition(lineRenderer.positionCount - 1, mainTileView.transform.position);
+                        // Create a new line for each valid connection
+                        GameObject lineObj = new GameObject("DynamicLine");
+                        LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
+                        lineRenderer.transform.parent = lineParentObj.transform;
+
+                        // Line properties
+                        lineRenderer.startWidth = baseWidth;
+                        lineRenderer.endWidth = baseWidth;
+                        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+                        lineRenderer.sortingOrder = 0;
+                        lineRenderer.startColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+                        lineRenderer.endColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+                        lineRenderer.numCornerVertices = 30;
+                        lineRenderer.numCapVertices = 30;
 
                         TileView neighborTileView = GetTileView(neighbor.PositionX, neighbor.PositionY);
-                        lineRenderer.positionCount++;
-                        lineRenderer.SetPosition(lineRenderer.positionCount - 1, neighborTileView.transform.position);
+
+                        // Smooth transition by adding midpoint (optional)
+                        Vector3 midPoint = (mainTileView.transform.position + neighborTileView.transform.position) / 2;
+
+                        lineRenderer.positionCount = 3;
+                        lineRenderer.SetPosition(0, mainTileView.transform.position);
+                        lineRenderer.SetPosition(1, midPoint + Vector3.back * 0.1f); // Small depth adjustment for smoothness
+                        lineRenderer.SetPosition(2, neighborTileView.transform.position);
                     }
                 }
             }
+
             lineParents.Add(lineParentObj.gameObject);
         }
 

@@ -1,4 +1,5 @@
 ﻿using Match3.Inputs;
+using Match3.Manager;
 using Match3.Model;
 using Match3.SO;
 using Match3.View;
@@ -23,6 +24,8 @@ namespace Match3.Presenter
         private List<Tile> selectedTiles = new List<Tile>();
         private List<Tile> selectedSwapTiles = new List<Tile>();
 
+        private ScoreManager scoreManager;
+
         public void InitializeGrid(VisualGrid visualGrid, Vector2Int gridSize, Vector2 gridStartPos, Vector2 gridEndPos, FruitDataSO[] fruits)
         {
             this.visualGrid = visualGrid;
@@ -42,6 +45,9 @@ namespace Match3.Presenter
             
             logicalGrid.OnColumnShifted += HandleColumnShift;
             logicalGrid.OnTilesSwapped += HandleTileSwap;
+
+            scoreManager = FindFirstObjectByType<ScoreManager>();
+
         }
         #region Event Handlers
         private void HandleTileSwap(Tile[] tiles)
@@ -57,49 +63,73 @@ namespace Match3.Presenter
 
         private void HandleDestroySelectedTiles(FruitDataSO[] fruits)
         {
-            List<Tile> selectedTiles = logicalGrid.GetSelectedTiles();
-            OnDestroyLineRenderer?.Invoke();
-            visualGrid.PlayDestroyAnimationForSelectedTiles(selectedTiles, () =>
+            if(scoreManager.score > scoreManager.EconomyData.DestroyCost)
             {
-                logicalGrid.ShiftSelectedTilesUp(fruits);
-            });
+                List<Tile> selectedTiles = logicalGrid.GetSelectedTiles();
+                foreach (Tile selectedTile in selectedTiles)
+                {
+                    foreach (Fruit fruit in scoreManager.EconomyData.Fruits)
+                    {
+                        if (fruit.FruitName == selectedTile.Fruit.FruitName)
+                        {
+                            scoreManager.AddScore(fruit.FruitPoint);
+                            break;
+                        }
+                    }
+                }
+                OnDestroyLineRenderer?.Invoke();
+                visualGrid.PlayDestroyAnimationForSelectedTiles(selectedTiles, () =>
+                {
+                    logicalGrid.ShiftSelectedTilesUp(fruits);
+                });
+                scoreManager.SubtractScore(scoreManager.EconomyData.DestroyCost);
+            }
+            else
+            {
+                // Game Over;
+            }
         }
 
         public void HandleSwapTile(Vector2 worldPosition)
         {
-            RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
-            if (hit.collider != null && hit.collider.CompareTag("TileView"))
+            if(scoreManager.score > scoreManager.EconomyData.SwapCost)
             {
-                TileView tileView = hit.collider.GetComponent<TileView>();
-                Tile tile = GetTileAt(tileView.GridPositionX, tileView.GridPositionY);
-                if (!tile.IsSelected)
+                RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
+                if (hit.collider != null && hit.collider.CompareTag("TileView"))
                 {
-                    if (selectedSwapTiles.Count == 0)
+                    TileView tileView = hit.collider.GetComponent<TileView>();
+                    Tile tile = GetTileAt(tileView.GridPositionX, tileView.GridPositionY);
+                    if (!tile.IsSelected)
                     {
-                        selectedSwapTiles.Add(tile);
-                        OnTileSelected?.Invoke(tile);
-                    }
-                    else
-                    {
-                        List<Tile> neighbors = logicalGrid.GetAllNeighbors(selectedSwapTiles[0]);
-                        if (neighbors.Contains(tile))
+                        if (selectedSwapTiles.Count == 0)
                         {
                             selectedSwapTiles.Add(tile);
                             OnTileSelected?.Invoke(tile);
                         }
                         else
                         {
-                            OnTilesDeSelected?.Invoke(selectedSwapTiles);
-                            selectedSwapTiles.Clear();
+                            List<Tile> neighbors = logicalGrid.GetAllNeighbors(selectedSwapTiles[0]);
+                            if (neighbors.Contains(tile))
+                            {
+                                selectedSwapTiles.Add(tile);
+                                OnTileSelected?.Invoke(tile);
+                            }
+                            else
+                            {
+                                OnTilesDeSelected?.Invoke(selectedSwapTiles);
+                                selectedSwapTiles.Clear();
+                            }
                         }
                     }
-                }
-                if (selectedSwapTiles.Count == 2)
-                {
-                    logicalGrid.SwapTiles(selectedSwapTiles[0], selectedSwapTiles[1]);
-                    selectedSwapTiles.Clear();
+                    if (selectedSwapTiles.Count == 2)
+                    {
+                        logicalGrid.SwapTiles(selectedSwapTiles[0], selectedSwapTiles[1]);
+                        selectedSwapTiles.Clear();
+                        scoreManager.SubtractScore(scoreManager.EconomyData.SwapCost);
+                    }
                 }
             }
+            
         }
 
 

@@ -7,5 +7,6 @@ namespace Match3.SO
     {
         public string FruitName;
         public Sprite Sprite;
+
     }
 }

@@ -69,8 +69,8 @@ namespace Match3.View
 
         public void PlaySelectedAnimation()
         {
-            transform.DOScale(new Vector3(DefaultScale.x * 1.15f,
-                                          DefaultScale.y * 1.15f),
+            transform.DOScale(new Vector3(DefaultScale.x * 1.1f,
+                                          DefaultScale.y * 1.1f),
                                           0.15f).SetEase(Ease.InBack);
         }
 
