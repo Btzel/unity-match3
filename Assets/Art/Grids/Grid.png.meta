@@ -3,8 +3,8 @@ guid: 4c8ce9a5cad24394fab8dd4b1ff7c3ee
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1652325455396500646
-    second: Grid 1_0
+      213: 385173514463150410
+    second: Grid_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 152
+  spritePixelsToUnits: 256
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Grid 1_0
+      name: Grid_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 128
-        height: 128
+        width: 1000
+        height: 1000
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6a47e3e4f3d3ee610800000000000000
-      internalID: 1652325455396500646
+      spriteID: a41077a4549685500800000000000000
+      internalID: 385173514463150410
       vertices: []
       indices: 
       edges: []
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Grid 1_0: 1652325455396500646
+      Grid_0: 385173514463150410
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

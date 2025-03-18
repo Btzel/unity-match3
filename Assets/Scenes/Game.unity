@@ -468,9 +468,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9e7128f1390c0e4b9c39f83f1a8fc2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetCamera: {fileID: 519420031}
-  referenceWidth: 1920
-  referenceHeight: 1080
 --- !u!1 &745254327
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,7 +543,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridPresenter: {fileID: 745254328}
   visualGrid: {fileID: 1688437383}
-  gridSize: {x: 5, y: 5}
+  gridSize: {x: 2, y: 2}
   gridStartPos: {x: -9, y: -9}
   gridEndPos: {x: 9, y: 9}
   fruits:
