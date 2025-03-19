@@ -13,8 +13,7 @@ namespace Match3.Presenter
     {
         public event Action<Tile> OnTileSelected;
         public event Action<List<Tile>> OnTilesDeSelected;
-        public event Action<List<Tile>> OnCreateLineRenderer;
-        public event Action OnDestroyLineRenderer;
+
 
         private LogicalGrid logicalGrid;
         private VisualGrid visualGrid;
@@ -77,7 +76,6 @@ namespace Match3.Presenter
                         }
                     }
                 }
-                OnDestroyLineRenderer?.Invoke();
                 visualGrid.PlayDestroyAnimationForSelectedTiles(selectedTiles, () =>
                 {
                     logicalGrid.ShiftSelectedTilesUp(fruits);
@@ -183,7 +181,6 @@ namespace Match3.Presenter
 
             if (selectedTiles.Count >= 3)
             {
-                OnCreateLineRenderer?.Invoke(selectedTiles);
                 foreach (Tile tile in selectedTiles)
                 {
                     tile.SetSelected(true);

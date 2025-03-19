@@ -20,93 +20,28 @@ namespace Match3.View
         public Vector2 GridStartPos { get; private set; }
         public Vector2 GridEndPos { get; private set; }
 
-
         [SerializeField] private TileView tilePrefab;
         [SerializeField] private Transform tilesParent;
         [SerializeField] private GridPresenter gridPresenter;
         [SerializeField] private GameObject gridPrefab;
         [SerializeField] private Transform gridsParent;
         [SerializeField] private GridDataSO[] grids;
-        [SerializeField] private Transform lineRenderersParent;
 
         private TileView[,] tileViews;
-        private List<GameObject> lineParents = new List<GameObject>();
 
         private void Start()
         {
             gridPresenter = FindFirstObjectByType<GridPresenter>();
             gridPresenter.OnTileSelected += AnimateSelectedTile;
             gridPresenter.OnTilesDeSelected += AnimateDeSelectedTiles;
-            gridPresenter.OnCreateLineRenderer += CreateLineRenderer;
-            gridPresenter.OnDestroyLineRenderer += DestroyLineRenderer;
-        }
 
-        private void DestroyLineRenderer()
-        {
-            if(lineParents.Count > 0)
-            {
-                foreach(GameObject lineParent in lineParents)
-                {
-                    Destroy(lineParent);
-                }
-            }
-        }
-
-        private void CreateLineRenderer(List<Tile> tileList)
-        {
-            if (tileList == null || tileList.Count < 2) return;
-
-            GameObject lineParentObj = new GameObject("DynamicLineParent");
-            lineParentObj.transform.parent = lineRenderersParent;
-
-            foreach (Tile tile in tileList)
-            {
-                TileView mainTileView = GetTileView(tile.PositionX, tile.PositionY);
-                List<Tile> neighbors = gridPresenter.GetNeighborsAt(tile);
-                float baseWidth = mainTileView.transform.localScale.x * .55f;
-                foreach (Tile neighbor in neighbors)
-                {
-                    if (neighbor.Fruit == tile.Fruit && tileList.Contains(neighbor))
-                    {
-                        // Create a new line for each valid connection
-                        GameObject lineObj = new GameObject("DynamicLine");
-                        LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
-                        lineRenderer.transform.parent = lineParentObj.transform;
-
-                        // Line properties
-                        lineRenderer.startWidth = baseWidth;
-                        lineRenderer.endWidth = baseWidth;
-                        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-                        lineRenderer.sortingOrder = 9;
-                        lineRenderer.startColor = new Color(0.8f, 0.8f, 0.8f, 1f);
-                        lineRenderer.endColor = new Color(0.8f, 0.8f, 0.8f, 1f);
-                        lineRenderer.numCornerVertices = 30;
-                        lineRenderer.numCapVertices = 30;
-
-                        TileView neighborTileView = GetTileView(neighbor.PositionX, neighbor.PositionY);
-
-                        // Smooth transition by adding midpoint (optional)
-                        Vector3 midPoint = (mainTileView.transform.position + neighborTileView.transform.position) / 2;
-
-                        lineRenderer.positionCount = 3;
-                        lineRenderer.SetPosition(0, mainTileView.transform.position);
-                        lineRenderer.SetPosition(1, midPoint + Vector3.back * 0.1f); // Small depth adjustment for smoothness
-                        lineRenderer.SetPosition(2, neighborTileView.transform.position);
-                    }
-                }
-            }
-
-            lineParents.Add(lineParentObj.gameObject);
         }
 
         private void OnDestroy()
         {
             gridPresenter.OnTileSelected -= AnimateSelectedTile;
             gridPresenter.OnTilesDeSelected -= AnimateDeSelectedTiles;
-            gridPresenter.OnCreateLineRenderer -= CreateLineRenderer;
-            gridPresenter.OnDestroyLineRenderer -= DestroyLineRenderer;
         }
-
         
         public void InitializeGrid(LogicalGrid logicalGrid, Vector2 startPos, Vector2 endPos)
         {
