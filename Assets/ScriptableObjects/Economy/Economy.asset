@@ -23,3 +23,5 @@ MonoBehaviour:
     FruitPoint: 8
   - FruitName: Strawberry
     FruitPoint: 10
+  DestroyCost: 10
+  SwapCost: 5
