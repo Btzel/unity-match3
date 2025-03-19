@@ -6,8 +6,8 @@ namespace Match3.Helpers
     {
         private Camera targetCamera;
 
-        [SerializeField] private float referenceWidth = 1920f;
-        [SerializeField] private float referenceHeight = 1080f;
+        private float referenceWidth = 1920f;
+        private float referenceHeight = 1080f;
 
         private float referenceAspect;
         private int lastScreenWidth, lastScreenHeight;

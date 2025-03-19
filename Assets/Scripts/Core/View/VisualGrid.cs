@@ -77,7 +77,7 @@ namespace Match3.View
                         lineRenderer.startWidth = baseWidth;
                         lineRenderer.endWidth = baseWidth;
                         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-                        lineRenderer.sortingOrder = 9;
+                        lineRenderer.sortingOrder = 0;
                         lineRenderer.startColor = new Color(0.8f, 0.8f, 0.8f, 1f);
                         lineRenderer.endColor = new Color(0.8f, 0.8f, 0.8f, 1f);
                         lineRenderer.numCornerVertices = 30;
@@ -144,11 +144,9 @@ namespace Match3.View
 
             GameObject grid = Instantiate(gridPrefab, gridsParent);
             grid.GetComponent<SpriteRenderer>().sprite = GridPicker.GetGrid(gridPosition, new Vector2Int(GridWidth,GridHeight), grids).Sprite;
-            grid.GetComponent<SpriteRenderer>().sortingOrder = 8;
             grid.transform.position = worldPosition;
             grid.transform.name = $"Grid ({gridPosition.x},{gridPosition.y})";
             grid.transform.localScale = scale;
-            
 
             TileView newTileView = Instantiate(tilePrefab, tilesParent);
             newTileView.SetGridPosition(gridPosition);
