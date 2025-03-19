@@ -29,10 +29,12 @@ namespace Match3.View
         [SerializeField] private GridDataSO[] grids;
 
         [SerializeField] private GameObject lineRenderersParent;
+        [SerializeField] private Sprite circleSprite;
 
         private TileView[,] tileViews;
-        [SerializeField] private LineRenderer currentLine;
+        private LineRenderer currentLine;
         private List<LineRenderer> completeLines = new List<LineRenderer>();
+        private List<TileView> previousTileViews = new List<TileView>();
 
         private void Start()
         {
@@ -62,6 +64,7 @@ namespace Match3.View
             {
                 Destroy(currentLine.gameObject);
                 currentLine = null;
+                previousTileViews.Clear();
             }
             
         }
@@ -69,35 +72,112 @@ namespace Match3.View
         private void HandleLineComplete()
         { 
             completeLines.Add(currentLine);
+            previousTileViews.Clear();
             currentLine = null;
         }
 
-        private void HandleLineSelected(List<Tile> tileList, Tile tile)
+        private void HandleLineSelected(List<Tile> tileList, Tile currentTile)
         {
             if (tileList.Count == 1)
             {
+                TileView tileView = GetTileView(currentTile.PositionX, currentTile.PositionY);
+
                 GameObject lineObj = new GameObject($"Line ({tileList.Last().PositionX},{tileList.Last().PositionY})");
                 LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
                 lineRenderer.transform.parent = lineRenderersParent.transform;
-                float lineWidth = 0.3f;
+
+                GameObject circle = new GameObject($"Circle ({tileView.GridPositionX},{tileView.GridPositionY})");
+                SpriteRenderer circleRenderer = circle.AddComponent<SpriteRenderer>();
+                circleRenderer.sprite = circleSprite;
+                circleRenderer.color = new Color(0f, 0f, 0f, 1f);
+                circleRenderer.sortingOrder = 10;
+                circleRenderer.transform.localScale = tileView.transform.localScale * 0.85f;
+                circleRenderer.transform.position = tileView.transform.position;
+                circleRenderer.transform.parent = lineRenderer.transform;
+
+                float lineWidth = tileView.transform.localScale.x * 0.2f;
 
                 lineRenderer.startWidth = lineWidth;
                 lineRenderer.endWidth = lineWidth;
                 lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
                 lineRenderer.sortingOrder = 9;
-                lineRenderer.startColor = new Color(0.8f, 0.8f, 0.8f, 1f);
-                lineRenderer.endColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+                lineRenderer.startColor = new Color(0f, 0f, 0f, 1f);
+                lineRenderer.endColor = new Color(0f, 0f, 0f, 1f);
+                lineRenderer.positionCount = 1;
+                
+                lineRenderer.SetPosition(lineRenderer.positionCount - 1, tileView.transform.position);
+                previousTileViews.Add(tileView);
 
                 currentLine = lineRenderer;
             }
-            else if(tileList.Count > 1)
+            else if(tileList.Count == 2)
             {
-                TileView lastTileView;
-                currentLine.positionCount = tileList.Count;
-                for(int i = 0; i < tileList.Count; i++)
+                currentLine.positionCount++;
+                TileView tileView = GetTileView(currentTile.PositionX, currentTile.PositionY);
+                currentLine.SetPosition(currentLine.positionCount - 1, tileView.transform.position);
+                previousTileViews.Add(tileView);
+
+                GameObject circle = new GameObject($"Circle ({tileView.GridPositionX},{tileView.GridPositionY})");
+                SpriteRenderer circleRenderer = circle.AddComponent<SpriteRenderer>();
+                circleRenderer.sprite = circleSprite;
+                circleRenderer.color = new Color(0f, 0f, 0f, 1f);
+                circleRenderer.sortingOrder = 10;
+                circleRenderer.transform.localScale = tileView.transform.localScale * 0.85f;
+                circleRenderer.transform.position = tileView.transform.position;
+                circleRenderer.transform.parent = currentLine.transform;
+            }
+            else
+            {
+                Tile lastTile = gridPresenter.GetTileAt(previousTileViews.Last().GridPositionX, previousTileViews.Last().GridPositionY);
+                List<Tile> lastTileNeighbors = gridPresenter.GetNeighborsAt(lastTile);
+                if (lastTileNeighbors.Contains(currentTile))
                 {
-                    lastTileView = GetTileView(tileList[i].PositionX, tileList[i].PositionY);
-                    currentLine.SetPosition(i, lastTileView.transform.position);
+                    currentLine.positionCount++;
+                    TileView tileView = GetTileView(currentTile.PositionX, currentTile.PositionY);
+                    currentLine.SetPosition(currentLine.positionCount - 1, tileView.transform.position);
+                    previousTileViews.Add(tileView);
+
+                    GameObject circle = new GameObject($"Circle ({tileView.GridPositionX},{tileView.GridPositionY})");
+                    SpriteRenderer circleRenderer = circle.AddComponent<SpriteRenderer>();
+                    circleRenderer.sprite = circleSprite;
+                    circleRenderer.color = new Color(0f, 0f, 0f, 1f);
+                    circleRenderer.sortingOrder = 10;
+                    circleRenderer.transform.localScale = tileView.transform.localScale * 0.85f;
+                    circleRenderer.transform.position = tileView.transform.position;
+                    circleRenderer.transform.parent = currentLine.transform;
+
+                }
+                else
+                {
+                    for(int i = previousTileViews.Count - 2; i >= 0; i--)
+                    {
+                        currentLine.positionCount++;
+                        TileView previousTileView = previousTileViews[i];
+                        currentLine.SetPosition(currentLine.positionCount - 1, previousTileView.transform.position);
+                        previousTileViews.Add(previousTileView);
+
+                        Tile previousTile = gridPresenter.GetTileAt(previousTileView.GridPositionX, previousTileView.GridPositionY);
+                        List<Tile> previousTileNeighbours = gridPresenter.GetNeighborsAt(previousTile);
+
+                        if (previousTileNeighbours.Contains(currentTile))
+                        {
+                            currentLine.positionCount++;
+                            TileView tileView = GetTileView(currentTile.PositionX, currentTile.PositionY);
+                            currentLine.SetPosition(currentLine.positionCount - 1, tileView.transform.position);
+                            previousTileViews.Add(tileView);
+
+                            GameObject circle = new GameObject($"Circle ({tileView.GridPositionX},{tileView.GridPositionY})");
+                            SpriteRenderer circleRenderer = circle.AddComponent<SpriteRenderer>();
+                            circleRenderer.sprite = circleSprite;
+                            circleRenderer.color = new Color(0f, 0f, 0f, 1f);
+                            circleRenderer.sortingOrder = 10;
+                            circleRenderer.transform.localScale = tileView.transform.localScale * 0.85f;
+                            circleRenderer.transform.position = tileView.transform.position;
+                            circleRenderer.transform.parent = currentLine.transform;
+
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -108,6 +188,9 @@ namespace Match3.View
             gridPresenter.OnTilesDeSelected -= AnimateDeSelectedTiles;
 
             gridPresenter.OnLineSelected -= HandleLineSelected;
+            gridPresenter.OnLineComplete -= HandleLineComplete;
+            gridPresenter.OnLineDeSelected -= HandleLineDeSelected;
+            gridPresenter.OnLineDestroy -= HandleLineDestroy;
         }
         
         public void InitializeGrid(LogicalGrid logicalGrid, Vector2 startPos, Vector2 endPos)

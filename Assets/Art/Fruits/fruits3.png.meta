@@ -229,8 +229,8 @@ TextureImporter:
       name: Pear
       rect:
         serializedVersion: 2
-        x: 830
-        y: 398
+        x: 824
+        y: 402
         width: 167
         height: 184
       alignment: 0
@@ -251,8 +251,8 @@ TextureImporter:
       name: Strawberry
       rect:
         serializedVersion: 2
-        x: 215
-        y: 595
+        x: 214
+        y: 596
         width: 179
         height: 207
       alignment: 0

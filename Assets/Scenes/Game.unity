@@ -1882,7 +1882,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f01eb7c4bc86c624d9c701c7ae82424e, type: 2}
   - {fileID: 11400000, guid: a621d20bb17aafa4c861aae0d9fa4ba5, type: 2}
   lineRenderersParent: {fileID: 793025538}
-  currentLine: {fileID: 0}
+  circleSprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
 --- !u!4 &1688437384
 Transform:
   m_ObjectHideFlags: 0
