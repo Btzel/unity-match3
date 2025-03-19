@@ -1881,7 +1881,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f6a4cf979d549274d82dcda4921afb7f, type: 2}
   - {fileID: 11400000, guid: f01eb7c4bc86c624d9c701c7ae82424e, type: 2}
   - {fileID: 11400000, guid: a621d20bb17aafa4c861aae0d9fa4ba5, type: 2}
-  lineRenderersParent: {fileID: 793025539}
+  lineRenderersParent: {fileID: 793025538}
+  currentLine: {fileID: 0}
 --- !u!4 &1688437384
 Transform:
   m_ObjectHideFlags: 0

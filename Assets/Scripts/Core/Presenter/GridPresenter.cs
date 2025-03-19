@@ -14,6 +14,11 @@ namespace Match3.Presenter
         public event Action<Tile> OnTileSelected;
         public event Action<List<Tile>> OnTilesDeSelected;
 
+        public event Action<List<Tile>,Tile> OnLineSelected;
+        public event Action OnLineDeSelected;
+        public event Action OnLineComplete;
+        public event Action OnLineDestroy;
+
 
         private LogicalGrid logicalGrid;
         private VisualGrid visualGrid;
@@ -76,9 +81,11 @@ namespace Match3.Presenter
                         }
                     }
                 }
+                OnLineDestroy?.Invoke();
                 visualGrid.PlayDestroyAnimationForSelectedTiles(selectedTiles, () =>
                 {
                     logicalGrid.ShiftSelectedTilesUp(fruits);
+                    
                 });
                 scoreManager.SubtractScore(scoreManager.EconomyData.DestroyCost);
             }
@@ -144,6 +151,7 @@ namespace Match3.Presenter
                     currentFruitType = tile.Fruit;
                     selectedTiles.Add(tile);
                     OnTileSelected?.Invoke(tile);
+                    OnLineSelected?.Invoke(selectedTiles,tile);
                 }
             }
         }
@@ -168,6 +176,7 @@ namespace Match3.Presenter
                             {
                                 selectedTiles.Add(tile);
                                 OnTileSelected?.Invoke(tile);
+                                OnLineSelected?.Invoke(selectedTiles, tile);
                                 break;
                             }
                         }
@@ -185,11 +194,14 @@ namespace Match3.Presenter
                 {
                     tile.SetSelected(true);
                 }
+                OnLineComplete?.Invoke();
                 selectedTiles.Clear();
+                
             }
             else
             {
                 OnTilesDeSelected?.Invoke(selectedTiles);
+                OnLineDeSelected?.Invoke();
                 selectedTiles.Clear();
             }
 

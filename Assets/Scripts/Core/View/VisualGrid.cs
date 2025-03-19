@@ -7,6 +7,7 @@ using Match3.SO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -27,7 +28,11 @@ namespace Match3.View
         [SerializeField] private Transform gridsParent;
         [SerializeField] private GridDataSO[] grids;
 
+        [SerializeField] private GameObject lineRenderersParent;
+
         private TileView[,] tileViews;
+        [SerializeField] private LineRenderer currentLine;
+        private List<LineRenderer> completeLines = new List<LineRenderer>();
 
         private void Start()
         {
@@ -35,12 +40,74 @@ namespace Match3.View
             gridPresenter.OnTileSelected += AnimateSelectedTile;
             gridPresenter.OnTilesDeSelected += AnimateDeSelectedTiles;
 
+            gridPresenter.OnLineSelected += HandleLineSelected;
+            gridPresenter.OnLineComplete += HandleLineComplete;
+            gridPresenter.OnLineDeSelected += HandleLineDeSelected;
+            gridPresenter.OnLineDestroy += HandleLineDestroy;
+
+        }
+
+        private void HandleLineDestroy()
+        {
+            foreach(LineRenderer line in completeLines)
+            {
+                Destroy(line.gameObject);
+            }
+            completeLines.Clear();
+        }
+
+        private void HandleLineDeSelected()
+        {
+            if (currentLine != null)
+            {
+                Destroy(currentLine.gameObject);
+                currentLine = null;
+            }
+            
+        }
+
+        private void HandleLineComplete()
+        { 
+            completeLines.Add(currentLine);
+            currentLine = null;
+        }
+
+        private void HandleLineSelected(List<Tile> tileList, Tile tile)
+        {
+            if (tileList.Count == 1)
+            {
+                GameObject lineObj = new GameObject($"Line ({tileList.Last().PositionX},{tileList.Last().PositionY})");
+                LineRenderer lineRenderer = lineObj.AddComponent<LineRenderer>();
+                lineRenderer.transform.parent = lineRenderersParent.transform;
+                float lineWidth = 0.3f;
+
+                lineRenderer.startWidth = lineWidth;
+                lineRenderer.endWidth = lineWidth;
+                lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+                lineRenderer.sortingOrder = 9;
+                lineRenderer.startColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+                lineRenderer.endColor = new Color(0.8f, 0.8f, 0.8f, 1f);
+
+                currentLine = lineRenderer;
+            }
+            else if(tileList.Count > 1)
+            {
+                TileView lastTileView;
+                currentLine.positionCount = tileList.Count;
+                for(int i = 0; i < tileList.Count; i++)
+                {
+                    lastTileView = GetTileView(tileList[i].PositionX, tileList[i].PositionY);
+                    currentLine.SetPosition(i, lastTileView.transform.position);
+                }
+            }
         }
 
         private void OnDestroy()
         {
             gridPresenter.OnTileSelected -= AnimateSelectedTile;
             gridPresenter.OnTilesDeSelected -= AnimateDeSelectedTiles;
+
+            gridPresenter.OnLineSelected -= HandleLineSelected;
         }
         
         public void InitializeGrid(LogicalGrid logicalGrid, Vector2 startPos, Vector2 endPos)
