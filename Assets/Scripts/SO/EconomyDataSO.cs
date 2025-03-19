@@ -11,7 +11,7 @@ public class Fruit
 
 namespace Match3.SO
 {
-    [CreateAssetMenu(fileName = "NewEconomy", menuName = "Create New Economy")]
+    [CreateAssetMenu(fileName = "NewEconomy", menuName = "Create New Economy Data")]
     public class EconomyDataSO : ScriptableObject
     {
         public List<Fruit> Fruits = new List<Fruit>();

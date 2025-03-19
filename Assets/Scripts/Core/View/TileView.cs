@@ -37,7 +37,7 @@ namespace Match3.View
         public void SetSprite(Sprite sprite)
         {
             spriteRenderer.sprite = sprite;
-            spriteRenderer.sortingOrder = 1;
+            spriteRenderer.sortingOrder = 10;
         }
 
         public void SetScale(Vector3 scale)

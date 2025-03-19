@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 386c94c26d6904e8fa68371eebbbaaf4
+guid: 4e1a067661e484cb8a0f7f4b04205250
 AssetOrigin:
   serializedVersion: 1
   productId: 165066
   packageName: UI Kit Pro - Casual Glossy
   packageVersion: 1.0
-  assetPath: Assets/UI Kit Pro - Casual Glossy/Images/Buttons/button_4_White.png
+  assetPath: Assets/UI Kit Pro - Casual Glossy/Images/Progress/progress_IconsLight.png
   uploadId: 449342
 TextureImporter:
   internalIDToNameTable: []
@@ -56,7 +56,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 75, y: 60, z: 75, w: 60}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
