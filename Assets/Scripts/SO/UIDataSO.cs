@@ -20,8 +20,7 @@ namespace Match.SO
         [Header("Game - BottomPanel")]
         public Sprite bottomPanelSprite;
         public Sprite DestroyButtonSprite;
-        public Sprite SwapToggleSprite;
-        public Sprite SwapToggleImageSprite;            
-        
+        public Sprite SwapBoosterSprite;
+        public Sprite HintBoosterSprite;
     }
 }

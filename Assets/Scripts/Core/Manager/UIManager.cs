@@ -24,9 +24,9 @@ namespace Match3.Manager
         [SerializeField] private Button destroyButton;
         [SerializeField] private TMP_Text destroyButtonText;
 
-        [SerializeField] private Toggle swapToggle;
-        [SerializeField] private Image swapToggleImage;
-        [SerializeField] private TMP_Text swapToggleText;
+        [SerializeField] private Image swapBoosterImage;
+        [SerializeField] private Image hintBoosterImage;
+
 
 
         private void Start()
@@ -46,12 +46,8 @@ namespace Match3.Manager
             destroyButton.GetComponent<Image>().sprite = uiData.DestroyButtonSprite;
             destroyButtonText.font = uiData.TextFont;
 
-            swapToggle.GetComponent<Image>().sprite = uiData.SwapToggleSprite;
-            swapToggleImage.sprite = uiData.SwapToggleImageSprite;
-            swapToggleText.font = uiData.TextFont;
-
-
-
+            swapBoosterImage.sprite = uiData.SwapBoosterSprite;
+            hintBoosterImage.sprite = uiData.HintBoosterSprite;
         }
     }
 }

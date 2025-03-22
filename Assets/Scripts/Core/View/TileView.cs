@@ -14,6 +14,8 @@ namespace Match3.View
 
         public SpriteRenderer spriteRenderer;
 
+        private Tween hintTween;
+
         public TileView(int gridPositionX, int gridPositionY, float worldPositionX, float worldPositionY)
         {
             GridPositionX = gridPositionX;
@@ -81,5 +83,23 @@ namespace Match3.View
                                           0.15f).SetEase(Ease.OutBack);
         }
 
+        public void PlayHintAnimation()
+        {
+            if (hintTween != null && hintTween.IsActive()) return;
+
+            hintTween = transform.DOScale(DefaultScale * 1.1f, 0.3f)
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetEase(Ease.InOutQuad);
+        }
+        public void StopHintAnimation()
+        {
+            if (hintTween != null)
+            {
+                hintTween.Kill();
+                hintTween = null;
+            }
+
+            transform.localScale = DefaultScale;
+        }
     }
 }

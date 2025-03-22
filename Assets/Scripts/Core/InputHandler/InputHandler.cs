@@ -14,18 +14,22 @@ namespace Match3.Inputs
         public event Action OnSelectionEnd;
         public event Action<FruitDataSO[]> OnDestroySelectedTiles;
         public event Action<Vector2> OnSwapTile;
+        public event Action OnHintBooster;
+
 
 
         [SerializeField] private Button destroyButton;
         [SerializeField] private GameManager manager;
-        [SerializeField] private Toggle swapTilesToggle;
+        [SerializeField] private Toggle swapBooster;
+        [SerializeField] private Button hintBooster;
 
         private bool isSwap;
 
         private void Start()
         {
             destroyButton.onClick.AddListener(() => OnDestroySelectedTiles?.Invoke(manager.fruits));
-            swapTilesToggle.onValueChanged.AddListener(UpdateSwapTileState);
+            swapBooster.onValueChanged.AddListener(UpdateSwapTileState);
+            hintBooster.onClick.AddListener(() => OnHintBooster?.Invoke());
         }
 
         private void Update()
@@ -33,12 +37,14 @@ namespace Match3.Inputs
             if (isSwap)
             {
                 if (Input.GetMouseButtonDown(0)) { OnSwapTile?.Invoke(GetMouseWorldPosition()); }
+               
             }
             else
             {
                 if (Input.GetMouseButtonDown(0)) { OnSelectionStart?.Invoke(GetMouseWorldPosition()); }
                 if (Input.GetMouseButton(0)) { OnSelectionContinue?.Invoke(GetMouseWorldPosition()); }
                 if (Input.GetMouseButtonUp(0)) { OnSelectionEnd?.Invoke(); }
+                
             }
             
         }
@@ -52,6 +58,8 @@ namespace Match3.Inputs
         {
             isSwap = swapState;
         }
+
+
         #endregion
     }
 }

@@ -27,8 +27,10 @@ namespace Match3.Presenter
         private InputHandler inputHandler;
         private List<Tile> selectedTiles = new List<Tile>();
         private List<Tile> selectedSwapTiles = new List<Tile>();
+        private List<Tile> hintedTiles = new List<Tile>();
 
         private ScoreManager scoreManager;
+
 
         public void InitializeGrid(VisualGrid visualGrid, Vector2Int gridSize, Vector2 gridStartPos, Vector2 gridEndPos, FruitDataSO[] fruits)
         {
@@ -46,12 +48,31 @@ namespace Match3.Presenter
             inputHandler.OnSelectionEnd += HandleSelectionEnd;
             inputHandler.OnDestroySelectedTiles += HandleDestroySelectedTiles;
             inputHandler.OnSwapTile += HandleSwapTile;
+            inputHandler.OnHintBooster += HandleShowHint;
             
             logicalGrid.OnColumnShifted += HandleColumnShift;
             logicalGrid.OnTilesSwapped += HandleTileSwap;
 
             scoreManager = FindFirstObjectByType<ScoreManager>();
 
+        }
+
+
+        private void HandleShowHint()
+        {
+            List<List<Tile>> possibleSelections = logicalGrid.GetPossibleSelections();
+            possibleSelections.RemoveAll(selection => selection[0].IsSelected);
+            if (possibleSelections.Count > 0)
+            {
+                List<Tile> bestPossibleSelection = possibleSelections[0];
+                if (!hintedTiles.Contains(bestPossibleSelection[0]) && bestPossibleSelection.Count > 0)
+                {
+                    hintedTiles.AddRange(bestPossibleSelection);
+                    visualGrid.PlayHintAnimation(bestPossibleSelection);
+                }
+            }
+            
+            
         }
         #region Event Handlers
         private void HandleTileSwap(Tile[] tiles)
@@ -81,6 +102,11 @@ namespace Match3.Presenter
                         }
                     }
                 }
+            
+                visualGrid.StopHintAnimation(hintedTiles);
+                hintedTiles.Clear();
+
+
                 OnLineDestroy?.Invoke();
                 visualGrid.PlayDestroyAnimationForSelectedTiles(selectedTiles, () =>
                 {
@@ -215,6 +241,9 @@ namespace Match3.Presenter
             inputHandler.OnSelectionEnd -= HandleSelectionEnd;
             inputHandler.OnDestroySelectedTiles -= HandleDestroySelectedTiles;
             inputHandler.OnSwapTile -= HandleSwapTile;
+            inputHandler.OnHintBooster -= HandleShowHint;
+
+
 
             logicalGrid.OnColumnShifted -= HandleColumnShift;
             logicalGrid.OnTilesSwapped -= HandleTileSwap;
