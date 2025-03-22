@@ -15,7 +15,8 @@ namespace Match.SO
 
         [Header("Game - TopPanel")]
         public Sprite TopPanelSprite;
-        public Sprite ScoreBackgroundSprite;
+        public Sprite goldBackgroundSprite;
+        public Sprite goldSprite;
 
         [Header("Game - BottomPanel")]
         public Sprite bottomPanelSprite;

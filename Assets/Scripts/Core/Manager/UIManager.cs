@@ -14,10 +14,11 @@ namespace Match3.Manager
         [SerializeField] private Image background;
 
         [Header("Game - TopPanel")]
-        [SerializeField] private Image topPanel;
+        [SerializeField] private GameObject topPanel;
 
-        [SerializeField] private Image scoreBackground;
-        [SerializeField] private TMP_Text scoreText;
+        [SerializeField] private Image goldBackground;
+        [SerializeField] private Image goldImage;
+        [SerializeField] private TMP_Text goldText;
 
         [Header("Game - BottomPanel")]
         [SerializeField] private Image bottomPanel;
@@ -34,11 +35,11 @@ namespace Match3.Manager
             background.gameObject.SetActive(true);
             background.sprite = uiData.BackgroundSprite;
 
-            topPanel.gameObject.SetActive(true);
-            topPanel.sprite = uiData.TopPanelSprite;
+            topPanel.SetActive(true);
             
-            scoreBackground.sprite = uiData.ScoreBackgroundSprite;
-            scoreText.font = uiData.TextFont;
+            goldBackground.sprite = uiData.goldBackgroundSprite;
+            goldImage.sprite = uiData.goldSprite;
+            goldText.font = uiData.TextFont;
 
             bottomPanel.gameObject.SetActive(true);
             bottomPanel.sprite = uiData.bottomPanelSprite;

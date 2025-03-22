@@ -29,7 +29,7 @@ namespace Match3.Presenter
         private List<Tile> selectedSwapTiles = new List<Tile>();
         private List<Tile> hintedTiles = new List<Tile>();
 
-        private ScoreManager scoreManager;
+        private GoldManager goldManager;
 
 
         public void InitializeGrid(VisualGrid visualGrid, Vector2Int gridSize, Vector2 gridStartPos, Vector2 gridEndPos, FruitDataSO[] fruits)
@@ -53,7 +53,7 @@ namespace Match3.Presenter
             logicalGrid.OnColumnShifted += HandleColumnShift;
             logicalGrid.OnTilesSwapped += HandleTileSwap;
 
-            scoreManager = FindFirstObjectByType<ScoreManager>();
+            goldManager = FindFirstObjectByType<GoldManager>();
 
         }
 
@@ -62,14 +62,14 @@ namespace Match3.Presenter
         {
             List<List<Tile>> possibleSelections = logicalGrid.GetPossibleSelections();
             possibleSelections.RemoveAll(selection => selection[0].IsSelected);
-            if (possibleSelections.Count > 0 && scoreManager.score > scoreManager.EconomyData.DestroyCost)
+            if (possibleSelections.Count > 0 && goldManager.gold > goldManager.EconomyData.DestroyCost)
             {
                 List<Tile> bestPossibleSelection = possibleSelections[0];
                 if (!hintedTiles.Contains(bestPossibleSelection[0]) && bestPossibleSelection.Count > 0)
                 {
                     hintedTiles.AddRange(bestPossibleSelection);
                     visualGrid.PlayHintAnimation(bestPossibleSelection);
-                    scoreManager.SubtractScore(scoreManager.EconomyData.HintCost);
+                    goldManager.SubtractGold(goldManager.EconomyData.HintCost);
                 }
             }
             
@@ -89,18 +89,18 @@ namespace Match3.Presenter
 
         private void HandleDestroySelectedTiles(FruitDataSO[] fruits)
         {
-            if(scoreManager.score > scoreManager.EconomyData.DestroyCost)
+            if(goldManager.gold > goldManager.EconomyData.DestroyCost)
             {
                 List<Tile> selectedTiles = logicalGrid.GetSelectedTiles();
                 if(selectedTiles.Count > 0)
                 {
                     foreach (Tile selectedTile in selectedTiles)
                     {
-                        foreach (Fruit fruit in scoreManager.EconomyData.Fruits)
+                        foreach (Fruit fruit in goldManager.EconomyData.Fruits)
                         {
                             if (fruit.FruitName == selectedTile.Fruit.FruitName)
                             {
-                                scoreManager.AddScore(fruit.FruitPoint);
+                                goldManager.AddGold(fruit.FruitPoint);
                                 break;
                             }
                         }
@@ -116,7 +116,7 @@ namespace Match3.Presenter
                         logicalGrid.ShiftSelectedTilesUp(fruits);
 
                     });
-                    scoreManager.SubtractScore(scoreManager.EconomyData.DestroyCost);
+                    goldManager.SubtractGold(goldManager.EconomyData.DestroyCost);
                 }
             }
             else
@@ -127,7 +127,7 @@ namespace Match3.Presenter
 
         public void HandleSwapTile(Vector2 worldPosition)
         {
-            if(scoreManager.score > scoreManager.EconomyData.SwapCost)
+            if(goldManager.gold > goldManager.EconomyData.SwapCost)
             {
                 RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
                 if (hit.collider != null && hit.collider.CompareTag("TileView"))
@@ -160,7 +160,7 @@ namespace Match3.Presenter
                     {
                         logicalGrid.SwapTiles(selectedSwapTiles[0], selectedSwapTiles[1]);
                         selectedSwapTiles.Clear();
-                        scoreManager.SubtractScore(scoreManager.EconomyData.SwapCost);
+                        goldManager.SubtractGold(goldManager.EconomyData.SwapCost);
                     }
                 }
             }
