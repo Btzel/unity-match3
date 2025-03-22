@@ -31,6 +31,7 @@ namespace Match3.View
         [SerializeField] private GameObject lineRenderersParent;
         [SerializeField] private Sprite circleSprite;
 
+
         private TileView[,] tileViews;
         private LineRenderer currentLine;
         private List<LineRenderer> completeLines = new List<LineRenderer>();
@@ -286,6 +287,9 @@ namespace Match3.View
 
             foreach (Tile tile in selectedTiles)
             {
+                
+                
+
                 TileView tileView = GetTileView(tile.PositionX, tile.PositionY);
                 if (tileView != null)
                 {

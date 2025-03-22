@@ -18,15 +18,15 @@ namespace Match3.Manager
 
         [SerializeField] private Image goldBackground;
         [SerializeField] private Image goldImage;
-        [SerializeField] private TMP_Text goldText;
+        [SerializeField] public TMP_Text goldText;
 
         [Header("Game - BottomPanel")]
         [SerializeField] private Image bottomPanel;
         [SerializeField] private Button destroyButton;
-        [SerializeField] private TMP_Text destroyButtonText;
+        [SerializeField] public TMP_Text destroyButtonText;
 
-        [SerializeField] private Image swapBoosterImage;
-        [SerializeField] private Image hintBoosterImage;
+        [SerializeField] public Image swapBoosterImage;
+        [SerializeField] public Image hintBoosterImage;
 
 
 

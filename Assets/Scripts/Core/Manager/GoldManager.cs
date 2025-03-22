@@ -1,4 +1,8 @@
+﻿using DG.Tweening;
+using Match.SO;
 using Match3.SO;
+using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -6,7 +10,11 @@ namespace Match3.Manager
 {
     public class GoldManager : MonoBehaviour
     {
+        public Action OnEarnFinish;
+
+        [SerializeField] private Transform goldParent;
         [SerializeField] private TMP_Text goldText;
+        [SerializeField] private UIDataSO uiData;
         public EconomyDataSO EconomyData;
 
         public int gold;
@@ -32,5 +40,87 @@ namespace Match3.Manager
 
             goldText.text = this.gold.ToString();
         }
+
+        public IEnumerator PlayEarnGoldAnimation(Vector3 startPos, Vector3 endPos, int goldAmount)
+        {
+            GameObject[] gold = new GameObject[3];
+            int completedAnimations = 0;
+
+            for (int i = 0; i < gold.Length; i++)
+            {
+                gold[i] = new GameObject("Gold");
+                SpriteRenderer goldImage = gold[i].AddComponent<SpriteRenderer>();
+                goldImage.sprite = uiData.goldSprite;
+                goldImage.transform.localScale = Vector3.one * 0.33f;
+                goldImage.transform.position = startPos;
+                goldImage.transform.SetParent(goldParent);
+                goldImage.sortingOrder = 20;
+                float duration = 0.5f;
+
+                GameObject currentGold = gold[i];
+                goldImage.transform.DOMove(endPos, duration)
+                    .SetEase(Ease.InBack)
+                    .OnComplete(() => {
+                        completedAnimations++;
+                        if (completedAnimations >= gold.Length)
+                        {
+                            AddGold(goldAmount);
+
+                            foreach (GameObject goldObj in gold)
+                            {
+                                if (goldObj != null)
+                                {
+                                    Destroy(goldObj);
+                                }
+                            }
+                        }
+                    });
+
+                yield return new WaitForSeconds(0.05f);
+            }
+            yield return new WaitUntil(() => completedAnimations >= gold.Length);
+        }
+
+        public IEnumerator PlaySpendGoldAnimation(Vector3 startPos, Vector3 endPos, int goldAmount)
+        {
+            GameObject[] gold = new GameObject[6];
+            int completedAnimations = 0;
+
+            for (int i = 0; i < gold.Length; i++)
+            {
+                gold[i] = new GameObject("Gold");
+                SpriteRenderer goldImage = gold[i].AddComponent<SpriteRenderer>();
+                goldImage.sprite = uiData.goldSprite;
+                goldImage.transform.localScale = Vector3.one * 0.33f;
+                goldImage.transform.position = startPos;
+                goldImage.transform.SetParent(goldParent);
+                goldImage.sortingOrder = 20;
+                float duration = 0.3f;
+
+                GameObject currentGold = gold[i];
+                goldImage.transform.DOMove(endPos, duration)
+                    .SetEase(Ease.InBack)
+                    .OnComplete(() => {
+                        completedAnimations++;
+                        if (completedAnimations >= gold.Length)
+                        {
+                            SubtractGold(goldAmount);
+
+                            foreach (GameObject goldObj in gold)
+                            {
+                                if (goldObj != null)
+                                {
+                                    Destroy(goldObj);
+                                }
+                            }
+                        }
+                    });
+
+                yield return new WaitForSeconds(0.05f);
+            }
+            yield return new WaitUntil(() => completedAnimations >= gold.Length);
+        }
+
+
     }
 }

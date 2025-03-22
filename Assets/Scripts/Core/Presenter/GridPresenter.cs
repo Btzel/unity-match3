@@ -1,4 +1,5 @@
-﻿using Match3.Inputs;
+﻿using DG.Tweening;
+using Match3.Inputs;
 using Match3.Manager;
 using Match3.Model;
 using Match3.SO;
@@ -30,6 +31,7 @@ namespace Match3.Presenter
         private List<Tile> hintedTiles = new List<Tile>();
 
         private GoldManager goldManager;
+        private UIManager uiManager;
 
 
         public void InitializeGrid(VisualGrid visualGrid, Vector2Int gridSize, Vector2 gridStartPos, Vector2 gridEndPos, FruitDataSO[] fruits)
@@ -54,9 +56,8 @@ namespace Match3.Presenter
             logicalGrid.OnTilesSwapped += HandleTileSwap;
 
             goldManager = FindFirstObjectByType<GoldManager>();
-
+            uiManager = FindFirstObjectByType<UIManager>();
         }
-
 
         private void HandleShowHint()
         {
@@ -67,9 +68,25 @@ namespace Match3.Presenter
                 List<Tile> bestPossibleSelection = possibleSelections[0];
                 if (!hintedTiles.Contains(bestPossibleSelection[0]) && bestPossibleSelection.Count > 0)
                 {
-                    hintedTiles.AddRange(bestPossibleSelection);
-                    visualGrid.PlayHintAnimation(bestPossibleSelection);
-                    goldManager.SubtractGold(goldManager.EconomyData.HintCost);
+                    Sequence animationSequence = DOTween.Sequence();
+                    animationSequence.AppendCallback(() =>
+                    {
+                        StartCoroutine(goldManager.PlaySpendGoldAnimation(
+                        uiManager.goldText.transform.position,
+                        uiManager.hintBoosterImage.transform.position,
+                        goldManager.EconomyData.HintCost));
+                    });
+
+                    animationSequence.AppendInterval(0.6f);
+
+                    animationSequence.AppendCallback(() => 
+                    {
+                        hintedTiles.AddRange(bestPossibleSelection);
+                        visualGrid.PlayHintAnimation(bestPossibleSelection);
+                    });
+
+                    animationSequence.Play();
+                    
                 }
             }
             
@@ -94,29 +111,44 @@ namespace Match3.Presenter
                 List<Tile> selectedTiles = logicalGrid.GetSelectedTiles();
                 if(selectedTiles.Count > 0)
                 {
-                    foreach (Tile selectedTile in selectedTiles)
-                    {
-                        foreach (Fruit fruit in goldManager.EconomyData.Fruits)
+                    Sequence animationSequence = DOTween.Sequence();
+                    animationSequence.AppendCallback(() => {
+                        StartCoroutine(goldManager.PlaySpendGoldAnimation(
+                            uiManager.goldText.transform.position,
+                            uiManager.destroyButtonText.transform.position,
+                            goldManager.EconomyData.DestroyCost));
+                    });
+                    animationSequence.AppendInterval(0.6f);
+                    animationSequence.AppendCallback(() => {
+                        foreach (Tile selectedTile in selectedTiles)
                         {
-                            if (fruit.FruitName == selectedTile.Fruit.FruitName)
+                            foreach (Fruit fruit in goldManager.EconomyData.Fruits)
                             {
-                                goldManager.AddGold(fruit.FruitPoint);
-                                break;
+                                if (fruit.FruitName == selectedTile.Fruit.FruitName)
+                                {
+                                    TileView tileView = GetTileViewAt(selectedTile.PositionX, selectedTile.PositionY);
+                                    StartCoroutine(goldManager.PlayEarnGoldAnimation(
+                                        tileView.transform.position,
+                                        uiManager.goldText.transform.position,
+                                        fruit.FruitPoint));
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    visualGrid.StopHintAnimation(hintedTiles);
-                    hintedTiles.Clear();
+                        visualGrid.StopHintAnimation(hintedTiles);
+                        hintedTiles.Clear();
 
+                        OnLineDestroy?.Invoke();
+                        visualGrid.PlayDestroyAnimationForSelectedTiles(selectedTiles, () =>
+                        {
+                            logicalGrid.ShiftSelectedTilesUp(fruits);
 
-                    OnLineDestroy?.Invoke();
-                    visualGrid.PlayDestroyAnimationForSelectedTiles(selectedTiles, () =>
-                    {
-                        logicalGrid.ShiftSelectedTilesUp(fruits);
-
+                        });
                     });
-                    goldManager.SubtractGold(goldManager.EconomyData.DestroyCost);
+
+                    animationSequence.Play();
+                    
                 }
             }
             else
@@ -158,9 +190,25 @@ namespace Match3.Presenter
                     }
                     if (selectedSwapTiles.Count == 2)
                     {
-                        logicalGrid.SwapTiles(selectedSwapTiles[0], selectedSwapTiles[1]);
-                        selectedSwapTiles.Clear();
-                        goldManager.SubtractGold(goldManager.EconomyData.SwapCost);
+                        Sequence animationSequence = DOTween.Sequence();
+                        animationSequence.AppendCallback(() =>
+                        {
+                            StartCoroutine(goldManager.PlaySpendGoldAnimation(
+                            uiManager.goldText.transform.position,
+                            uiManager.swapBoosterImage.transform.position,
+                            goldManager.EconomyData.SwapCost));
+                        });
+                        animationSequence.AppendInterval(0.6f);
+
+                        animationSequence.AppendCallback(() =>
+                        {
+                            logicalGrid.SwapTiles(selectedSwapTiles[0], selectedSwapTiles[1]);
+                            selectedSwapTiles.Clear();
+                        });
+
+                        animationSequence.Play();
+                        
+                        
                     }
                 }
             }
