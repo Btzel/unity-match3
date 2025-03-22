@@ -17,5 +17,6 @@ namespace Match3.SO
         public List<Fruit> Fruits = new List<Fruit>();
         public int DestroyCost;
         public int SwapCost;
+        public int HintCost;
     }
 }

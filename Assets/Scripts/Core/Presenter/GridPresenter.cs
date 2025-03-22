@@ -62,13 +62,14 @@ namespace Match3.Presenter
         {
             List<List<Tile>> possibleSelections = logicalGrid.GetPossibleSelections();
             possibleSelections.RemoveAll(selection => selection[0].IsSelected);
-            if (possibleSelections.Count > 0)
+            if (possibleSelections.Count > 0 && scoreManager.score > scoreManager.EconomyData.DestroyCost)
             {
                 List<Tile> bestPossibleSelection = possibleSelections[0];
                 if (!hintedTiles.Contains(bestPossibleSelection[0]) && bestPossibleSelection.Count > 0)
                 {
                     hintedTiles.AddRange(bestPossibleSelection);
                     visualGrid.PlayHintAnimation(bestPossibleSelection);
+                    scoreManager.SubtractScore(scoreManager.EconomyData.HintCost);
                 }
             }
             
@@ -91,29 +92,32 @@ namespace Match3.Presenter
             if(scoreManager.score > scoreManager.EconomyData.DestroyCost)
             {
                 List<Tile> selectedTiles = logicalGrid.GetSelectedTiles();
-                foreach (Tile selectedTile in selectedTiles)
+                if(selectedTiles.Count > 0)
                 {
-                    foreach (Fruit fruit in scoreManager.EconomyData.Fruits)
+                    foreach (Tile selectedTile in selectedTiles)
                     {
-                        if (fruit.FruitName == selectedTile.Fruit.FruitName)
+                        foreach (Fruit fruit in scoreManager.EconomyData.Fruits)
                         {
-                            scoreManager.AddScore(fruit.FruitPoint);
-                            break;
+                            if (fruit.FruitName == selectedTile.Fruit.FruitName)
+                            {
+                                scoreManager.AddScore(fruit.FruitPoint);
+                                break;
+                            }
                         }
                     }
+
+                    visualGrid.StopHintAnimation(hintedTiles);
+                    hintedTiles.Clear();
+
+
+                    OnLineDestroy?.Invoke();
+                    visualGrid.PlayDestroyAnimationForSelectedTiles(selectedTiles, () =>
+                    {
+                        logicalGrid.ShiftSelectedTilesUp(fruits);
+
+                    });
+                    scoreManager.SubtractScore(scoreManager.EconomyData.DestroyCost);
                 }
-            
-                visualGrid.StopHintAnimation(hintedTiles);
-                hintedTiles.Clear();
-
-
-                OnLineDestroy?.Invoke();
-                visualGrid.PlayDestroyAnimationForSelectedTiles(selectedTiles, () =>
-                {
-                    logicalGrid.ShiftSelectedTilesUp(fruits);
-                    
-                });
-                scoreManager.SubtractScore(scoreManager.EconomyData.DestroyCost);
             }
             else
             {
