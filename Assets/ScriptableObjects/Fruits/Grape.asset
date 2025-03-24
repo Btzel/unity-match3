@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FruitName: Grape
   Sprite: {fileID: 655773928, guid: 4f56e3ca3356abc4bba464eeb5149ec5, type: 3}
+  SelectionColor: {r: 0, g: 0.26026773, b: 1, a: 1}

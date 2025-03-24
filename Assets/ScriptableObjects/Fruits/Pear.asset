@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FruitName: Pear
   Sprite: {fileID: -17509593, guid: 4f56e3ca3356abc4bba464eeb5149ec5, type: 3}
+  SelectionColor: {r: 0.1668864, g: 0.7830189, b: 0, a: 1}

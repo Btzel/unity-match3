@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FruitName: Strawberry
   Sprite: {fileID: -1501577999, guid: 4f56e3ca3356abc4bba464eeb5149ec5, type: 3}
+  SelectionColor: {r: 1, g: 0.00969137, b: 0, a: 1}

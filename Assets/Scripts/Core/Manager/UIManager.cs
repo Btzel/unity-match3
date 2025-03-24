@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Match.SO;
 using TMPro;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace Match3.Manager
 
         [Header("Game - BottomPanel")]
         [SerializeField] private Image bottomPanel;
-        [SerializeField] private Button destroyButton;
+        [SerializeField] public Button destroyButton;
         [SerializeField] public TMP_Text destroyButtonText;
 
         [SerializeField] public Image swapBoosterImage;
@@ -49,6 +50,17 @@ namespace Match3.Manager
 
             swapBoosterImage.sprite = uiData.SwapBoosterSprite;
             hintBoosterImage.sprite = uiData.HintBoosterSprite;
+        }
+
+        public void ButtonOnClick(Image image)
+        {
+            image.transform.DOScale(image.transform.localScale * 1.2f,
+                                          0.3f).SetEase(Ease.InBack);
+        }
+
+        public void ButtonOffClick(Image image)
+        {
+            image.transform.DOScale(1, 0.3f).SetEase(Ease.InBack);
         }
     }
 }

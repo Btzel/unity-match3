@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FruitName: Apple
   Sprite: {fileID: -2320653310183431534, guid: 7e57a1cd75418204e9bc3f96bd0f8fca, type: 3}
+  SelectionColor: {r: 1, g: 0.09962947, b: 0, a: 1}

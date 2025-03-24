@@ -7,6 +7,7 @@ using Match3.View;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Match3.Presenter
 {
@@ -71,6 +72,7 @@ namespace Match3.Presenter
                     Sequence animationSequence = DOTween.Sequence();
                     animationSequence.AppendCallback(() =>
                     {
+                        uiManager.ButtonOnClick(uiManager.hintBoosterImage);
                         StartCoroutine(goldManager.PlaySpendGoldAnimation(
                         uiManager.goldText.transform.position,
                         uiManager.hintBoosterImage.transform.position,
@@ -81,8 +83,10 @@ namespace Match3.Presenter
 
                     animationSequence.AppendCallback(() => 
                     {
+                        uiManager.ButtonOffClick(uiManager.hintBoosterImage);
                         hintedTiles.AddRange(bestPossibleSelection);
                         visualGrid.PlayHintAnimation(bestPossibleSelection);
+                        
                     });
 
                     animationSequence.Play();
@@ -113,6 +117,7 @@ namespace Match3.Presenter
                 {
                     Sequence animationSequence = DOTween.Sequence();
                     animationSequence.AppendCallback(() => {
+                        uiManager.ButtonOnClick(uiManager.destroyButton.GetComponent<Image>());
                         StartCoroutine(goldManager.PlaySpendGoldAnimation(
                             uiManager.goldText.transform.position,
                             uiManager.destroyButtonText.transform.position,
@@ -127,6 +132,7 @@ namespace Match3.Presenter
                                 if (fruit.FruitName == selectedTile.Fruit.FruitName)
                                 {
                                     TileView tileView = GetTileViewAt(selectedTile.PositionX, selectedTile.PositionY);
+                                    uiManager.ButtonOffClick(uiManager.destroyButton.GetComponent<Image>());
                                     StartCoroutine(goldManager.PlayEarnGoldAnimation(
                                         tileView.transform.position,
                                         uiManager.goldText.transform.position,
@@ -135,9 +141,6 @@ namespace Match3.Presenter
                                 }
                             }
                         }
-
-                        visualGrid.StopHintAnimation(hintedTiles);
-                        hintedTiles.Clear();
 
                         OnLineDestroy?.Invoke();
                         visualGrid.PlayDestroyAnimationForSelectedTiles(selectedTiles, () =>
@@ -204,6 +207,7 @@ namespace Match3.Presenter
                         {
                             logicalGrid.SwapTiles(selectedSwapTiles[0], selectedSwapTiles[1]);
                             selectedSwapTiles.Clear();
+                            inputHandler.UpdateSwapTileState(false);
                         });
 
                         animationSequence.Play();
@@ -230,6 +234,8 @@ namespace Match3.Presenter
                     selectedTiles.Add(tile);
                     OnTileSelected?.Invoke(tile);
                     OnLineSelected?.Invoke(selectedTiles,tile);
+                    visualGrid.StopHintAnimation(hintedTiles);
+                    hintedTiles.Clear();
                 }
             }
         }

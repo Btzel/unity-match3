@@ -16,14 +16,11 @@ namespace Match3.Inputs
         public event Action<Vector2> OnSwapTile;
         public event Action OnHintBooster;
 
-
-
+        [SerializeField] private UIManager uiManager;
         [SerializeField] private Button destroyButton;
         [SerializeField] private GameManager manager;
         [SerializeField] private Toggle swapBooster;
         [SerializeField] private Button hintBooster;
-
-        private bool isSwap;
 
         private void Start()
         {
@@ -34,17 +31,15 @@ namespace Match3.Inputs
 
         private void Update()
         {
-            if (isSwap)
+            if (swapBooster.isOn)
             {
                 if (Input.GetMouseButtonDown(0)) { OnSwapTile?.Invoke(GetMouseWorldPosition()); }
-               
             }
             else
             {
                 if (Input.GetMouseButtonDown(0)) { OnSelectionStart?.Invoke(GetMouseWorldPosition()); }
                 if (Input.GetMouseButton(0)) { OnSelectionContinue?.Invoke(GetMouseWorldPosition()); }
                 if (Input.GetMouseButtonUp(0)) { OnSelectionEnd?.Invoke(); }
-                
             }
             
         }
@@ -54,11 +49,18 @@ namespace Match3.Inputs
             return Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
 
-        private void UpdateSwapTileState(bool swapState)
+        public void UpdateSwapTileState(bool swapState)
         {
-            isSwap = swapState;
+            swapBooster.isOn = swapState;
+            if (swapBooster.isOn)
+            {
+                uiManager.ButtonOnClick(uiManager.swapBoosterImage);
+            }
+            else
+            {
+                uiManager.ButtonOffClick(uiManager.swapBoosterImage);
+            }
         }
-
 
         #endregion
     }

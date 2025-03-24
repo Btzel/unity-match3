@@ -99,7 +99,9 @@ namespace Match3.View
                 hintTween = null;
             }
 
-            transform.localScale = DefaultScale;
+            transform.DOScale(new Vector3(DefaultScale.x,
+                                          DefaultScale.y),
+                                          0.15f).SetEase(Ease.OutBack);
         }
     }
 }

@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FruitName: Banana
   Sprite: {fileID: 812791085135685875, guid: 7e57a1cd75418204e9bc3f96bd0f8fca, type: 3}
+  SelectionColor: {r: 1, g: 0.83246005, b: 0, a: 1}

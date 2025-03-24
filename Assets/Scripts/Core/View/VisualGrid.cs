@@ -90,7 +90,7 @@ namespace Match3.View
                 GameObject circle = new GameObject($"Circle ({tileView.GridPositionX},{tileView.GridPositionY})");
                 SpriteRenderer circleRenderer = circle.AddComponent<SpriteRenderer>();
                 circleRenderer.sprite = circleSprite;
-                circleRenderer.color = new Color(0.937f, 0.749f, 0.016f, 1f);
+                circleRenderer.color = currentTile.Fruit.SelectionColor;
                 circleRenderer.sortingOrder = 10;
                 circleRenderer.transform.localScale = tileView.transform.localScale * 0.85f;
                 circleRenderer.transform.position = tileView.transform.position;
@@ -102,8 +102,8 @@ namespace Match3.View
                 lineRenderer.endWidth = lineWidth;
                 lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
                 lineRenderer.sortingOrder = 9;
-                lineRenderer.startColor = new Color(0.937f, 0.749f, 0.016f, 1f);
-                lineRenderer.endColor = new Color(0.937f, 0.749f, 0.016f, 1f);
+                lineRenderer.startColor = currentTile.Fruit.SelectionColor;
+                lineRenderer.endColor = currentTile.Fruit.SelectionColor;
                 lineRenderer.positionCount = 1;
                 
                 lineRenderer.SetPosition(lineRenderer.positionCount - 1, tileView.transform.position);
@@ -121,7 +121,7 @@ namespace Match3.View
                 GameObject circle = new GameObject($"Circle ({tileView.GridPositionX},{tileView.GridPositionY})");
                 SpriteRenderer circleRenderer = circle.AddComponent<SpriteRenderer>();
                 circleRenderer.sprite = circleSprite;
-                circleRenderer.color = new Color(0.937f, 0.749f, 0.016f, 1f);
+                circleRenderer.color = currentTile.Fruit.SelectionColor;
                 circleRenderer.sortingOrder = 10;
                 circleRenderer.transform.localScale = tileView.transform.localScale * 0.85f;
                 circleRenderer.transform.position = tileView.transform.position;
@@ -141,7 +141,7 @@ namespace Match3.View
                     GameObject circle = new GameObject($"Circle ({tileView.GridPositionX},{tileView.GridPositionY})");
                     SpriteRenderer circleRenderer = circle.AddComponent<SpriteRenderer>();
                     circleRenderer.sprite = circleSprite;
-                    circleRenderer.color = new Color(0.937f, 0.749f, 0.016f, 1f);
+                    circleRenderer.color = currentTile.Fruit.SelectionColor;
                     circleRenderer.sortingOrder = 10;
                     circleRenderer.transform.localScale = tileView.transform.localScale * 0.85f;
                     circleRenderer.transform.position = tileView.transform.position;
@@ -170,7 +170,7 @@ namespace Match3.View
                             GameObject circle = new GameObject($"Circle ({tileView.GridPositionX},{tileView.GridPositionY})");
                             SpriteRenderer circleRenderer = circle.AddComponent<SpriteRenderer>();
                             circleRenderer.sprite = circleSprite;
-                            circleRenderer.color =new Color(0.937f, 0.749f, 0.016f, 1f);
+                            circleRenderer.color = currentTile.Fruit.SelectionColor;
                             circleRenderer.sortingOrder = 10;
                             circleRenderer.transform.localScale = tileView.transform.localScale * 0.85f;
                             circleRenderer.transform.position = tileView.transform.position;
