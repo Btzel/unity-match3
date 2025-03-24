@@ -14,11 +14,14 @@ namespace Match.SO
         public Sprite BackgroundSprite;
 
         [Header("Game - TopPanel")]
-        public Sprite goldBackgroundSprite;
-        public Sprite goldSprite;
+        public Sprite TopPanelSprite;
+        public Sprite LevelBackgroundSprite;
+
+        public Sprite GoldBackgroundSprite;
+        public Sprite GoldSprite;
 
         [Header("Game - BottomPanel")]
-        public Sprite bottomPanelSprite;
+        public Sprite BottomPanelSprite;
         public Sprite DestroyButtonSprite;
         public Sprite SwapBoosterSprite;
         public Sprite HintBoosterSprite;

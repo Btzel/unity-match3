@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TextFont: {fileID: 11400000, guid: f10308ef4ca95e14fb148ab6a523243d, type: 2}
   BackgroundSprite: {fileID: 2574752957084981186, guid: 2ec8e7a8c029aa447b3014ed21a944d9, type: 3}
-  TopPanelSprite: {fileID: 21300000, guid: 2484ce5c6ecea42989718d2c8333313d, type: 3}
-  goldBackgroundSprite: {fileID: 21300000, guid: 4359db26c17ad4f22b778eea4851deee, type: 3}
-  goldSprite: {fileID: 21300000, guid: 0bdaf83dcdf064756b3e070895921c69, type: 3}
-  bottomPanelSprite: {fileID: 21300000, guid: f4e49e21999354cc6a0b8697e634ac03, type: 3}
+  TopPanelSprite: {fileID: 21300000, guid: 2ee4a41bfabde4dfca0c6eb5100c7777, type: 3}
+  LevelBackgroundSprite: {fileID: 21300000, guid: 2b35dc8cc635942fd816727acad5c7e8, type: 3}
+  GoldBackgroundSprite: {fileID: 21300000, guid: 167f5c14a2a394d22962b1ea939885d6, type: 3}
+  GoldSprite: {fileID: 21300000, guid: 0bdaf83dcdf064756b3e070895921c69, type: 3}
+  BottomPanelSprite: {fileID: 21300000, guid: 4e1a067661e484cb8a0f7f4b04205250, type: 3}
   DestroyButtonSprite: {fileID: 21300000, guid: 4e1a067661e484cb8a0f7f4b04205250, type: 3}
   SwapBoosterSprite: {fileID: 21300000, guid: efecb810c49721d4083152fb4f392ecd, type: 3}
   HintBoosterSprite: {fileID: 21300000, guid: c6186b40571f8f446b61cc7e66465a18, type: 3}

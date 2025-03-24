@@ -50,7 +50,7 @@ namespace Match3.Manager
             {
                 gold[i] = new GameObject("Gold");
                 SpriteRenderer goldImage = gold[i].AddComponent<SpriteRenderer>();
-                goldImage.sprite = uiData.goldSprite;
+                goldImage.sprite = uiData.GoldSprite;
                 goldImage.transform.localScale = Vector3.one * 0.33f;
                 goldImage.transform.position = startPos;
                 goldImage.transform.SetParent(goldParent);
@@ -90,7 +90,7 @@ namespace Match3.Manager
             {
                 gold[i] = new GameObject("Gold");
                 SpriteRenderer goldImage = gold[i].AddComponent<SpriteRenderer>();
-                goldImage.sprite = uiData.goldSprite;
+                goldImage.sprite = uiData.GoldSprite;
                 goldImage.transform.localScale = Vector3.one * 0.33f;
                 goldImage.transform.position = startPos;
                 goldImage.transform.SetParent(goldParent);
