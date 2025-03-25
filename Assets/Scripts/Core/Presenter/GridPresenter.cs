@@ -185,7 +185,28 @@ namespace Match3.Presenter
                                 {
                                     if (fruit.FruitName == goldObj.name)
                                     {
-                                        goldManager.PlayEarnGoldAnimation(goldObj, uiManager.goldText.transform.position, fruit.FruitPoint);
+                                        foreach (LevelFruit levelFruit in levelManager.currentLevel.LevelFruits)
+                                        {
+                                            if (levelFruit.Fruit.FruitName == fruit.FruitName)
+                                            {
+                                                goldManager.PlayEarnGoldAnimation(goldObj, uiManager.goldText.transform.position, fruit.FruitPoint);
+                                                levelFruit.fruitCount--;
+                                                foreach (UIManager.RequirementText requirementText in uiManager.requirementTexts)
+                                                {
+                                                    if (requirementText.fruitName == levelFruit.Fruit.FruitName)
+                                                    {
+                                                        requirementText.requirementText.text = levelFruit.fruitCount.ToString();
+                                                        break;
+                                                    }
+                                                }
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                goldManager.PlayEarnGoldAnimation(goldObj, uiManager.goldText.transform.position, fruit.FruitPoint);
+                                                break;
+                                            }
+                                        }
                                         break;
                                     }
                                 }

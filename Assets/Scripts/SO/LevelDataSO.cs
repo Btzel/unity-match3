@@ -22,6 +22,6 @@ namespace Match3.SO
         [Space]
         [Header("Level Requirements")]
         public int score;
-        public List<LevelFruit> LevelFruits = new List<LevelFruit>();
+        public List<LevelFruit> LevelFruits;
     }
 }
