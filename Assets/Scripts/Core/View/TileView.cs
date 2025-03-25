@@ -54,7 +54,7 @@ namespace Match3.View
 
             if (isRequired && requiredTransform != null)
             {
-                seq.Append(transform.DOScale(DefaultScale * 1.5f, 0.2f).SetEase(Ease.OutBack));
+                seq.Append(transform.DOScale(DefaultScale * 1.3f, 0.2f).SetEase(Ease.OutBack));
                 seq.Append(transform.DOMove(requiredTransform.position, 1f).SetEase(Ease.InBack));
                 seq.Append(transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack));
             }
@@ -63,7 +63,7 @@ namespace Match3.View
                 seq.Append(transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack));
                 seq.Append(transform.DOScale(Vector3.zero, 1.0f));
             }
-
+            seq.Append(transform.DOScale(Vector3.zero, 0.2f));
             seq.OnComplete(() => onComplete?.Invoke());
         }
 

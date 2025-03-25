@@ -1,6 +1,7 @@
 using Match3.Manager;
 using Match3.SO;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,10 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private LevelDataSO[] Levels;
     [SerializeField] private int levelIndex;
 
-    public LevelDataSO currentLevel;
+    [Serializable]
+    public class CurrentLevel
+    {
+        public string LevelName;
         public int score;
         public List<LevelFruit> LevelFruits;
     }

@@ -17,5 +17,7 @@ MonoBehaviour:
   LevelFruits:
   - Fruit: {fileID: 11400000, guid: f6eea42862a657741a6d6d321d54a33c, type: 2}
     fruitCount: 15
+    fruitTransform: {fileID: 0}
   - Fruit: {fileID: 11400000, guid: 0e268ace4b0065845884751e625aee6e, type: 2}
     fruitCount: 20
+    fruitTransform: {fileID: 0}

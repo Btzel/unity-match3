@@ -510,8 +510,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4ad53cec2ebbee9479d3beb39924e541, type: 2}
   - {fileID: 11400000, guid: af3b6418f8e5b5e4e857b461edaab7e3, type: 2}
   - {fileID: 11400000, guid: 890f135623300ac43b5a64506ec69dca, type: 2}
-  levelIndex: 0
-  currentLevel: {fileID: 0}
+  levelIndex: 2
+  currentLevel:
+    LevelName: 
+    score: 0
+    LevelFruits: []
 --- !u!1 &394732048
 GameObject:
   m_ObjectHideFlags: 0

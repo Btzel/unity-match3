@@ -185,12 +185,14 @@ namespace Match3.Presenter
                                 {
                                     if (fruit.FruitName == goldObj.name)
                                     {
+                                        bool matchFound = false;
                                         foreach (LevelFruit levelFruit in levelManager.currentLevel.LevelFruits)
                                         {
                                             if (levelFruit.Fruit.FruitName == fruit.FruitName)
                                             {
                                                 goldManager.PlayEarnGoldAnimation(goldObj, uiManager.goldText.transform.position, fruit.FruitPoint);
                                                 levelFruit.fruitCount--;
+
                                                 foreach (UIManager.RequirementText requirementText in uiManager.requirementTexts)
                                                 {
                                                     if (requirementText.fruitName == levelFruit.Fruit.FruitName)
@@ -199,14 +201,16 @@ namespace Match3.Presenter
                                                         break;
                                                     }
                                                 }
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                goldManager.PlayEarnGoldAnimation(goldObj, uiManager.goldText.transform.position, fruit.FruitPoint);
+
+                                                matchFound = true;
                                                 break;
                                             }
                                         }
+                                        if (!matchFound)
+                                        {
+                                            goldManager.PlayEarnGoldAnimation(goldObj, uiManager.goldText.transform.position, fruit.FruitPoint);
+                                        }
+
                                         break;
                                     }
                                 }
