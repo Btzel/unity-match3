@@ -48,11 +48,23 @@ namespace Match3.View
             transform.localScale = scale;
         }
 
-        public void PlayDestroyAnimation(Action onComplete)
+        public void PlayDestroyAnimation(Action onComplete, bool isRequired, Transform requiredTransform)
         {
-            transform.DOScale(Vector3.zero, 0.3f)
-                .SetEase(Ease.InBack)
-                .OnComplete(() => onComplete?.Invoke());
+            Sequence seq = DOTween.Sequence();
+
+            if (isRequired && requiredTransform != null)
+            {
+                seq.Append(transform.DOScale(DefaultScale * 1.5f, 0.2f).SetEase(Ease.OutBack));
+                seq.Append(transform.DOMove(requiredTransform.position, 1f).SetEase(Ease.InBack));
+                seq.Append(transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack));
+            }
+            else
+            {
+                seq.Append(transform.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack));
+                seq.Append(transform.DOScale(Vector3.zero, 1.0f));
+            }
+
+            seq.OnComplete(() => onComplete?.Invoke());
         }
 
         public void PlaySwapAnimationVanish(Action onComplete)

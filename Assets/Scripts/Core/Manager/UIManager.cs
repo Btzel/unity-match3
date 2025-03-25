@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Match.SO;
 using Match3.SO;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace Match3.Manager
     public class UIManager : MonoBehaviour
     {
         [Header("UI Data")]
-        [SerializeField] private UIDataSO uiData;
+        [SerializeField] public UIDataSO uiData;
 
         [Header("Level Data")]
         [SerializeField] private LevelManager levelManager;
@@ -38,6 +39,13 @@ namespace Match3.Manager
         [SerializeField] public Image swapBoosterImage;
         [SerializeField] public Image hintBoosterImage;
 
+        public class RequirementText
+        {
+            public TextMeshProUGUI requirementText;
+            public string fruitName;
+        }
+
+        public List<RequirementText> requirementTexts = new List<RequirementText>();
         private void Start()
         {
             background.gameObject.SetActive(true);
@@ -70,10 +78,18 @@ namespace Match3.Manager
                 
                 RectTransform textRect = levelRequirementText.GetComponent<RectTransform>();
                 textRect.position = new Vector3(0,-70,0);
-
-
+                
                 levelRequirementText.transform.SetParent(levelRequirementImage.transform);
                 levelRequirementImage.transform.SetParent(levelRequirementParent,false);
+
+                levelFruit.fruitTransform = levelRequirementImage.transform;
+
+                RequirementText newRequirementText = new RequirementText();
+                newRequirementText.requirementText = levelRequirementText;
+                newRequirementText.fruitName = levelFruit.Fruit.FruitName;
+
+                requirementTexts.Add(newRequirementText);
+
             }
 
             goldBackground.sprite = uiData.GoldBackgroundSprite;

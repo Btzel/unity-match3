@@ -6,6 +6,7 @@ using Match3.SO;
 using Match3.View;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,6 +34,7 @@ namespace Match3.Presenter
 
         private GoldManager goldManager;
         private UIManager uiManager;
+        private LevelManager levelManager;
 
 
         public void InitializeGrid(VisualGrid visualGrid, Vector2Int gridSize, Vector2 gridStartPos, Vector2 gridEndPos, FruitDataSO[] fruits)
@@ -58,6 +60,7 @@ namespace Match3.Presenter
 
             goldManager = FindFirstObjectByType<GoldManager>();
             uiManager = FindFirstObjectByType<UIManager>();
+            levelManager = FindFirstObjectByType<LevelManager>();
         }
 
         private void HandleShowHint()
@@ -110,13 +113,15 @@ namespace Match3.Presenter
 
         private void HandleDestroySelectedTiles(FruitDataSO[] fruits)
         {
-            if(goldManager.gold > goldManager.EconomyData.DestroyCost)
+            if (goldManager.gold > goldManager.EconomyData.DestroyCost)
             {
                 List<Tile> selectedTiles = logicalGrid.GetSelectedTiles();
-                if(selectedTiles.Count > 0)
+                List<GameObject> goldObjects = new List<GameObject>();
+                if (selectedTiles.Count > 0)
                 {
                     Sequence animationSequence = DOTween.Sequence();
-                    animationSequence.AppendCallback(() => {
+                    animationSequence.AppendCallback(() =>
+                    {
                         uiManager.ButtonOnClick(uiManager.destroyButton.GetComponent<Image>());
                         StartCoroutine(goldManager.PlaySpendGoldAnimation(
                             uiManager.goldText.transform.position,
@@ -124,7 +129,10 @@ namespace Match3.Presenter
                             goldManager.EconomyData.DestroyCost));
                     });
                     animationSequence.AppendInterval(0.6f);
-                    animationSequence.AppendCallback(() => {
+                    animationSequence.AppendCallback(() =>
+                    {
+                        OnLineDestroy?.Invoke();
+                        
                         foreach (Tile selectedTile in selectedTiles)
                         {
                             foreach (Fruit fruit in goldManager.EconomyData.Fruits)
@@ -132,31 +140,62 @@ namespace Match3.Presenter
                                 if (fruit.FruitName == selectedTile.Fruit.FruitName)
                                 {
                                     TileView tileView = GetTileViewAt(selectedTile.PositionX, selectedTile.PositionY);
+
+                                    GameObject goldObj = new GameObject(fruit.FruitName);
+                                    goldObj.transform.position = tileView.transform.position;
+                                    goldObj.transform.localScale = Vector3.zero;
+                                    goldObj.transform.rotation = Quaternion.Euler(0, 0, -30);
+
+                                    SpriteRenderer goldSR = goldObj.AddComponent<SpriteRenderer>();
+                                    goldSR.sprite = uiManager.uiData.GoldSprite;
+                                    goldSR.sortingOrder = 9;
+
+                                    GameObject goldTextObj = new GameObject("GoldText");
+                                    goldTextObj.transform.SetParent(goldObj.transform);
+                                    TextMeshPro goldText = goldTextObj.AddComponent<TextMeshPro>();
+                                    goldText.text = fruit.FruitPoint.ToString();
+
+                                    goldText.alignment = TextAlignmentOptions.Center;
+                                    goldText.sortingOrder = 10;
+                                    goldText.color = new Color(50f / 255f, 50f / 255f, 50f / 255f, 255f / 255f);
+                                    goldText.font = uiManager.uiData.TextFont;
+                                    goldText.fontSize = 8;
+
+                                    goldTextObj.transform.localPosition = new Vector3(0.15f, 0.1f, 0);
+                                    goldTextObj.transform.localScale = Vector3.one;
+
+                                    RectTransform textRectTransform = goldTextObj.GetComponent<RectTransform>();
+                                    textRectTransform.sizeDelta = new Vector2(1, 2);
+
+                                    goldObj.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InBack);
+
                                     uiManager.ButtonOffClick(uiManager.destroyButton.GetComponent<Image>());
-                                    StartCoroutine(goldManager.PlayEarnGoldAnimation(
-                                        tileView.transform.position,
-                                        uiManager.goldText.transform.position,
-                                        fruit.FruitPoint));
+
+                                    goldObjects.Add(goldObj);
+
                                     break;
                                 }
                             }
                         }
-
-                        OnLineDestroy?.Invoke();
                         visualGrid.PlayDestroyAnimationForSelectedTiles(selectedTiles, () =>
                         {
+                            foreach (GameObject goldObj in goldObjects)
+                            {
+                                foreach (Fruit fruit in goldManager.EconomyData.Fruits)
+                                {
+                                    if (fruit.FruitName == goldObj.name)
+                                    {
+                                        goldManager.PlayEarnGoldAnimation(goldObj, uiManager.goldText.transform.position, fruit.FruitPoint);
+                                        break;
+                                    }
+                                }
+                            }
+                            goldObjects.Clear();
                             logicalGrid.ShiftSelectedTilesUp(fruits);
-
-                        });
+                        }, levelManager.currentLevel.LevelFruits);
                     });
-
                     animationSequence.Play();
-                    
                 }
-            }
-            else
-            {
-                // Game Over;
             }
         }
 

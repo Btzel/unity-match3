@@ -281,18 +281,20 @@ namespace Match3.View
             }
         }
 
-        public void PlayDestroyAnimationForSelectedTiles(List<Tile> selectedTiles, Action onComplete)
+        public void PlayDestroyAnimationForSelectedTiles(List<Tile> selectedTiles, Action onComplete, List<LevelFruit> requiredFruits)
         {
             int tilesRemaining = selectedTiles.Count;
 
             foreach (Tile tile in selectedTiles)
             {
-                
-                
-
                 TileView tileView = GetTileView(tile.PositionX, tile.PositionY);
+                
                 if (tileView != null)
                 {
+                    LevelFruit matchedFruit = requiredFruits.FirstOrDefault(lf => lf.Fruit == tile.Fruit);
+                    bool isRequired = matchedFruit != null;
+                    Transform fruitTransform = matchedFruit?.fruitTransform;
+
                     tileView.PlayDestroyAnimation(() =>
                     {
                         tilesRemaining--;
@@ -300,7 +302,8 @@ namespace Match3.View
                         {
                             onComplete?.Invoke();
                         }
-                    });
+                        
+                    },isRequired,fruitTransform);
                 }
             }
         }

@@ -8,6 +8,7 @@ public class LevelFruit
 {
     public FruitDataSO Fruit;
     public int fruitCount;
+    public Transform fruitTransform;
 }
 
 namespace Match3.SO
